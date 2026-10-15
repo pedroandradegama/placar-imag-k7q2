@@ -1,0 +1,1374 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="campeao-versao" content="f6ec95d6e9"><title>Campeão de Agendamentos</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700;800&display=swap"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style id="css">/* Painel de TV: pista de corrida em asfalto, uma só aparência (escura) para leitura à distância.
+   Layout: cabeçalho fino · pista (raias por pessoa, linha de chegada = meta individual) · coluna do pódio */
+:root {
+  --chao: #0f1216;
+  --asfalto: #181d23;
+  --asfalto-2: #1d232a;
+  --borda: #2b323b;
+  --tinta: #ece6d8;
+  --texto: #f3efe6;
+  --suave: #9aa3ad;
+  --amarelo: #f2c335;
+  --zebra: #d9483b;
+  --ok: #57c48a;
+  --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --f-corpo: "Figtree", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html { height: 100%; font-size: clamp(12px, 0.82vw + 4px, 22px); }
+body {
+  height: 100%; margin: 0; background: var(--chao); color: var(--texto);
+  font-family: var(--f-corpo); font-size: 1rem; line-height: 1.35;
+}
+#app {
+  min-height: 100%; display: flex; flex-direction: column; gap: 0.9rem;
+  padding-block: 0.9rem; box-sizing: border-box;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+button, input, select { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--amarelo); outline-offset: 2px; }
+
+/* ---------- cabeçalho ---------- */
+.topo { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: 0.8rem; min-width: 0; }
+.bandeira { width: 2.2rem; height: 2.2rem; flex: none; border-radius: 4px;
+  background: repeating-conic-gradient(var(--tinta) 0 25%, #111 0 50%) 0 0 / 0.55rem 0.55rem; }
+.marca h1 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 2.1rem; letter-spacing: 0.02em;
+  text-transform: uppercase; line-height: 1; text-wrap: balance; }
+.marca small { display: block; color: var(--suave); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+.indicadores { display: flex; gap: 0.6rem; margin-left: auto; flex-wrap: wrap; }
+.ind { background: var(--asfalto); border: 1px solid var(--borda); border-radius: 6px; padding: 0.35rem 0.75rem; }
+.ind b { font-family: var(--f-display); font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; display: block; line-height: 1.05; }
+.ind span { font-size: 0.72rem; color: var(--suave); text-transform: uppercase; letter-spacing: 0.08em; }
+.acoes { display: flex; gap: 0.5rem; }
+.btn { background: var(--asfalto-2); border: 1px solid var(--borda); border-radius: 6px; padding: 0.45rem 0.8rem; cursor: pointer; font-weight: 600; }
+.btn:hover { border-color: var(--suave); }
+.btn.forte { background: var(--amarelo); color: #1a1405; border-color: var(--amarelo); }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- corpo ---------- */
+.corpo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; flex: 1; min-height: 0; }
+@media (min-width: 1100px) { .corpo { grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem); } }
+
+.pista { background: var(--asfalto); border: 1px solid var(--borda); border-radius: 10px; padding: 0.8rem 0.9rem 0.7rem;
+  display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; }
+.regua { display: grid; grid-template-columns: var(--rotulo) minmax(0, 1fr); font-size: 0.72rem; color: var(--suave);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.regua .escala { position: relative; height: 1.1rem; }
+.regua .escala span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.raias { --rotulo: 9.5rem; display: grid; grid-template-columns: var(--rotulo) minmax(0, 1fr); flex: 1; min-height: 0;
+  grid-auto-rows: minmax(2.3rem, 1fr); position: relative; }
+.pista { --rotulo: 9.5rem; }
+@media (max-width: 560px) { .pista, .raias { --rotulo: 6.6rem; } }
+
+.rotulo { display: flex; align-items: center; gap: 0.5rem; padding-right: 0.5rem; min-width: 0; border-bottom: 1px solid var(--borda); }
+.rotulo .nome { font-weight: 700; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rotulo .chegou { font-size: 0.68rem; font-weight: 700; color: #111; background: var(--amarelo); border-radius: 3px; padding: 0.05rem 0.3rem; margin-left: 0.2rem; }
+.avatar { width: 1.9rem; height: 1.9rem; flex: none; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+  font-weight: 800; font-size: 0.75rem; color: #111; border: 2px solid var(--tinta); box-sizing: border-box; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.raia { position: relative; overflow: hidden; border-bottom: 1px dashed rgba(236, 230, 216, 0.22); min-width: 0; }
+.raia.par, .rotulo.par { background: var(--asfalto-2); }
+.rastro { position: absolute; left: 0; top: 50%; height: 0.38rem; transform: translateY(-50%); border-radius: 0 3px 3px 0; }
+.rastro.real { opacity: 0.95; }
+.rastro.agendado { opacity: 0.35; background-image: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 10px) !important; background-color: transparent !important; }
+.carro { position: absolute; top: 50%; left: 4.7rem; z-index: 2; width: 4.6rem; height: 2.1rem; transform: translate(-100%, -55%);
+  transition: left 1.8s cubic-bezier(.2, .7, .2, 1); }
+.carro svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.carro .roda { transform-box: fill-box; transform-origin: center; }
+.carro .roda { animation: gira var(--vel, .35s) linear infinite; }
+.carro .corpo { animation: sacode .42s ease-in-out infinite alternate; }
+@keyframes sacode { from { transform: translateY(0); } to { transform: translateY(-0.6px); } }
+@keyframes gira { to { transform: rotate(360deg); } }
+.etiqueta { position: absolute; z-index: 2; top: 50%; transform: translate(0.35rem, -50%); font-family: var(--f-display); font-weight: 800;
+  font-size: 1.05rem; font-variant-numeric: tabular-nums; color: var(--tinta); white-space: nowrap; transition: left 1.8s cubic-bezier(.2, .7, .2, 1); }
+
+.sobre { grid-column: 2; position: relative; pointer-events: none; z-index: 1; }
+.chegada { position: absolute; top: 0; bottom: 0; right: 0.4rem; width: 0.7rem;
+  background: repeating-conic-gradient(var(--tinta) 0 25%, #0d0d0d 0 50%) 0 0 / 0.7rem 0.7rem; opacity: 0.9; }
+.ritmo { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--amarelo); opacity: 0.75; }
+.largada { position: absolute; top: 0; bottom: 0; left: 0; width: 0.35rem;
+  background: repeating-linear-gradient(180deg, var(--zebra) 0 0.6rem, var(--tinta) 0.6rem 1.2rem); }
+
+.legenda { display: flex; gap: 1.2rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--suave); margin-top: 0.55rem; }
+.legenda i { display: inline-block; vertical-align: middle; margin-right: 0.35rem; }
+.legenda .l-real { width: 1.4rem; height: 0.38rem; background: var(--tinta); border-radius: 2px; }
+.legenda .l-ag { width: 1.4rem; height: 0.38rem; background: repeating-linear-gradient(90deg, var(--tinta) 0 6px, transparent 6px 10px); opacity: 0.5; }
+.legenda .l-ritmo { width: 0; height: 0.9rem; border-left: 2px dashed var(--amarelo); }
+.legenda .l-chegada { width: 0.6rem; height: 0.9rem; background: repeating-conic-gradient(var(--tinta) 0 25%, #0d0d0d 0 50%) 0 0 / 0.3rem 0.3rem; }
+
+/* ---------- lateral ---------- */
+.lateral { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.bloco { background: var(--asfalto); border: 1px solid var(--borda); border-radius: 10px; padding: 0.9rem 1rem; }
+.bloco h2 { margin: 0 0 0.7rem; font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.podio { display: flex; flex-direction: column; gap: 0.55rem; }
+.lugar { display: grid; grid-template-columns: 2.2rem 2.8rem minmax(0, 1fr) auto; align-items: center; gap: 0.6rem;
+  padding: 0.45rem 0.55rem; border-radius: 8px; background: var(--asfalto-2); }
+.lugar.p1 { background: linear-gradient(90deg, rgba(242, 195, 53, 0.22), var(--asfalto-2) 70%); border: 1px solid rgba(242, 195, 53, 0.55); }
+.lugar .pos { font-family: var(--f-display); font-weight: 800; font-size: 1.9rem; text-align: center; color: var(--amarelo); line-height: 1; }
+.lugar .avatar { width: 2.8rem; height: 2.8rem; font-size: 1rem; }
+.lugar .quem { font-weight: 700; font-size: 1.08rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lugar .pts { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; font-variant-numeric: tabular-nums; text-align: right; line-height: 1; }
+.lugar .pts small { display: block; font-family: var(--f-corpo); font-size: 0.65rem; font-weight: 600; color: var(--suave); text-transform: uppercase; letter-spacing: 0.08em; }
+.volta { display: grid; grid-template-columns: 2.8rem minmax(0, 1fr); gap: 0.7rem; align-items: center; }
+.volta .avatar { width: 2.8rem; height: 2.8rem; font-size: 1rem; }
+.volta b { font-size: 1.1rem; display: block; }
+.volta span { color: var(--suave); font-size: 0.85rem; }
+.vazio { color: var(--suave); font-size: 0.9rem; }
+.regras { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.9rem; color: #d7d2c7; }
+.rodape { font-size: 0.75rem; color: var(--suave); }
+
+/* ---------- gestão ---------- */
+dialog.gestao { width: min(1100px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid var(--borda);
+  border-radius: 12px; background: #14181d; color: var(--texto); }
+dialog.gestao::backdrop { background: rgba(0, 0, 0, 0.6); }
+.g-topo { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--borda); position: sticky; top: 0; background: #14181d; z-index: 1; flex-wrap: wrap; }
+.g-topo h2 { margin: 0; font-family: var(--f-display); font-size: 1.5rem; text-transform: uppercase; }
+.abas { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+.aba { background: transparent; border: 1px solid transparent; border-radius: 6px; padding: 0.4rem 0.7rem; cursor: pointer; color: var(--suave); font-weight: 600; }
+.aba[aria-selected="true"] { color: var(--texto); border-color: var(--borda); background: var(--asfalto-2); }
+.g-fechar { margin-left: auto; }
+.g-corpo { padding: 1rem 1.1rem 1.3rem; display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; }
+.g-corpo p { margin: 0; max-width: 70ch; }
+.passos { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; }
+.arquivo { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+.aviso { border-left: 3px solid var(--amarelo); background: rgba(242, 195, 53, 0.08); padding: 0.55rem 0.8rem; border-radius: 4px; }
+.aviso.erro { border-color: var(--zebra); background: rgba(217, 72, 59, 0.1); }
+.aviso.ok { border-color: var(--ok); background: rgba(87, 196, 138, 0.08); }
+.tabela-wrap { overflow-x: auto; border: 1px solid var(--borda); border-radius: 8px; }
+table.t { border-collapse: collapse; width: 100%; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+table.t th, table.t td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--borda); text-align: right; white-space: nowrap; }
+table.t th { color: var(--suave); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; background: #171c22; }
+table.t th:first-child, table.t td:first-child { text-align: left; }
+table.t td.esq { text-align: left; }
+table.t tr.clicavel { cursor: pointer; }
+table.t tr.clicavel:hover td { background: #1a2027; }
+table.t input, table.t select { background: #0f1317; border: 1px solid var(--borda); border-radius: 5px; padding: 0.25rem 0.4rem; }
+table.t input[type="number"] { width: 4.5rem; text-align: right; }
+table.t input.largo { width: 10rem; }
+table.t input.medio { width: 7rem; }
+.foto-cel { display: flex; align-items: center; gap: 0.4rem; }
+.foto-cel label { cursor: pointer; color: var(--amarelo); font-size: 0.8rem; text-decoration: underline; }
+.foto-cel button { background: none; border: none; color: var(--suave); font-size: 0.8rem; cursor: pointer; text-decoration: underline; padding: 0; }
+.resumo { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.6rem; }
+.resumo div { background: var(--asfalto); border: 1px solid var(--borda); border-radius: 8px; padding: 0.5rem 0.7rem; }
+.resumo b { display: block; font-family: var(--f-display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.resumo span { font-size: 0.75rem; color: var(--suave); }
+.memoria { background: var(--asfalto); border: 1px solid var(--borda); border-radius: 8px; padding: 0.8rem 1rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.memoria h3 { margin: 0; font-size: 1.05rem; }
+.memoria .linha { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem; border-bottom: 1px dashed var(--borda); padding-bottom: 0.4rem; }
+.memoria .linha span { color: #d7d2c7; }
+.memoria .linha b { font-variant-numeric: tabular-nums; }
+.memoria .linha.total b { color: var(--amarelo); }
+.rodape-g { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+
+body.tv .so-gestao, body.tv .acoes { display: none !important; }
+
+
+.posn { font-family: var(--f-display); font-weight: 800; font-size: 1.15rem; width: 1.9rem; text-align: right; color: var(--suave); font-variant-numeric: tabular-nums; flex: none; }
+.rotulo.top1 .posn, .rotulo.top2 .posn, .rotulo.top3 .posn { color: var(--amarelo); }
+.rotulo.top1 .nome { color: var(--amarelo); }
+.raias { --rotulo: 11.5rem; }
+.pista { --rotulo: 11.5rem; }
+@media (max-width: 560px) { .pista, .raias { --rotulo: 8.4rem; } .posn { width: 1.4rem; font-size: 1rem; } }
+.vento { position: absolute; right: 100%; top: 18%; width: 2.2rem; height: 64%; display: flex; flex-direction: column; justify-content: space-around; pointer-events: none; }
+.vento i { display: block; height: 2px; border-radius: 2px; background: rgba(236, 230, 216, .55); animation: vento .7s linear infinite; }
+.vento i:nth-child(2) { animation-delay: .23s; width: 70%; margin-left: 30%; }
+.vento i:nth-child(3) { animation-delay: .46s; width: 85%; margin-left: 15%; }
+@keyframes vento { from { transform: translateX(60%); opacity: 0; } 30% { opacity: 1; } to { transform: translateX(-80%); opacity: 0; } }
+.etiqueta { left: 4.9rem; }
+.avatar.grande { width: 6rem; height: 6rem; border-width: 4px; }
+
+/* ---------- intervalo (clipe de 30 s) ---------- */
+.intervalo { position: fixed; inset: 0; z-index: 50; background: #0b0e12; overflow: hidden; color: var(--texto); }
+.iv-ceu { position: absolute; left: 0; right: 0; top: 0; height: 30%; background: linear-gradient(#151b23, #0e1217); }
+.iv-arquibancada { position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
+  background: radial-gradient(circle at 50% 40%, rgba(236,230,216,.35) 0 2px, transparent 3px) 0 0 / 14px 12px, linear-gradient(#202833, #161c24);
+  animation: rola-fundo 2.4s linear infinite; }
+.iv-pista { position: absolute; left: 0; right: 0; top: 30%; height: 62%; background: #1b2027;
+  border-top: 12px solid transparent; border-bottom: 12px solid transparent;
+  border-image: repeating-linear-gradient(90deg, var(--zebra) 0 40px, var(--tinta) 40px 80px) 12; }
+.iv-faixa { position: absolute; left: 0; right: 0; top: 50%; height: 6px; transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, var(--tinta) 0 70px, transparent 70px 140px); animation: rola .35s linear infinite; opacity: .7; }
+@keyframes rola { from { background-position: 0 0; } to { background-position: -140px 0; } }
+@keyframes rola-fundo { from { background-position: 0 0, 0 0; } to { background-position: -140px 0, 0 0; } }
+.intervalo.curta .iv-pista { opacity: .35; }
+.iv-legenda { position: absolute; top: 5%; left: 0; right: 0; text-align: center; padding: 0 16px; z-index: 3; }
+.iv-legenda b { display: block; font-family: var(--f-display); font-weight: 800; font-size: clamp(2rem, 5vw, 5.5rem); text-transform: uppercase; line-height: 1; text-wrap: balance; text-shadow: 0 4px 0 rgba(0,0,0,.4); }
+.iv-legenda span { display: block; margin-top: .5rem; font-size: clamp(1rem, 1.6vw, 1.8rem); color: var(--amarelo); font-weight: 700; }
+.iv-pular { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 5; opacity: .75; }
+body.tv .iv-pular { display: none; }
+.iv-luzes { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); display: flex; gap: 1.4rem; background: #0a0a0a; padding: 1rem 1.4rem; border-radius: 1rem; border: 3px solid #333; z-index: 4; }
+.iv-luzes i { width: clamp(3rem, 6vw, 6.5rem); aspect-ratio: 1; border-radius: 50%; background: #2a2a2a; box-shadow: inset 0 0 12px #000; }
+.iv-luzes i.verm { background: #e23b2e; box-shadow: 0 0 30px #e23b2e; }
+.iv-luzes i.verde { background: #3fd07a; box-shadow: 0 0 34px #3fd07a; }
+.iv-carro { position: absolute; width: clamp(9rem, 17vw, 20rem); aspect-ratio: 80 / 36; transform: translate(-50%, -50%); z-index: 2; }
+.iv-carro svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.iv-carro .roda { transform-box: fill-box; transform-origin: center; animation: gira .16s linear infinite; }
+.iv-carro .vento { width: 45%; }
+.iv-carro .vento i { height: 4px; }
+.iv-nome { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: .2rem; font-family: var(--f-display); font-weight: 800; font-size: clamp(1rem, 1.6vw, 1.9rem); text-transform: uppercase; white-space: nowrap; text-shadow: 0 2px 0 #000; }
+.iv-fogo { position: absolute; right: 96%; top: 38%; width: 40%; height: 38%; border-radius: 50% 0 0 50%;
+  background: radial-gradient(ellipse at 100% 50%, #fff6c2 0 18%, #ffb52e 35%, #e2461f 62%, transparent 72%); animation: chama .09s linear infinite alternate; filter: blur(1px); }
+@keyframes chama { from { transform: scaleX(.85) scaleY(.9); } to { transform: scaleX(1.15) scaleY(1.05); } }
+.iv-faisca { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #ffd34d; box-shadow: 0 0 8px #ffb52e; z-index: 3; }
+.iv-confete { position: absolute; top: 0; width: 10px; height: 16px; z-index: 4; }
+.iv-obj { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
+.iv-cafe { position: absolute; width: clamp(3rem, 5vw, 6rem); aspect-ratio: 1; transform: translate(-50%, -50%); z-index: 1; filter: drop-shadow(0 0 14px rgba(242,195,53,.8)); }
+.iv-cafe svg { width: 100%; height: 100%; }
+.iv-rampa { position: absolute; width: clamp(5rem, 9vw, 11rem); aspect-ratio: 2 / 1; transform: translate(-50%, -20%); z-index: 1;
+  background: linear-gradient(90deg, var(--amarelo), #b88f12); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+.iv-podio { position: absolute; left: 50%; bottom: 10%; transform: translateX(-50%); display: flex; align-items: flex-end; gap: clamp(1rem, 3vw, 3rem); z-index: 3; }
+.iv-degrau { display: flex; flex-direction: column; align-items: center; gap: .3rem; text-align: center; }
+.iv-degrau b { font-family: var(--f-display); font-size: clamp(1.4rem, 2.4vw, 2.8rem); text-transform: uppercase; }
+.iv-degrau span { color: var(--amarelo); font-weight: 700; font-size: clamp(.9rem, 1.3vw, 1.5rem); }
+.iv-bloco { margin-top: .4rem; width: clamp(7rem, 12vw, 14rem); background: var(--asfalto-2); border: 2px solid var(--borda); border-bottom: none; border-radius: 8px 8px 0 0;
+  display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: clamp(2rem, 4vw, 4.5rem); color: var(--amarelo); }
+.iv-degrau.d1 .iv-bloco { height: clamp(7rem, 16vh, 13rem); }
+.iv-degrau.d2 .iv-bloco { height: clamp(5rem, 11vh, 9rem); }
+.iv-degrau.d3 .iv-bloco { height: clamp(4rem, 8vh, 7rem); }
+.iv-degrau.d1 .avatar { width: 7.5rem; height: 7.5rem; border-color: var(--amarelo) !important; }
+@media (prefers-reduced-motion: reduce) {
+  .carro, .etiqueta { transition: none; }
+  .carro .roda, .carro .corpo, .vento i, .iv-faixa, .iv-arquibancada, .iv-carro .roda, .iv-fogo { animation: none; }
+}
+
+.iv-banana { width: clamp(3.5rem, 6vw, 7rem); aspect-ratio: 3 / 2; }
+.iv-pneu { width: clamp(2.6rem, 4.5vw, 5rem); aspect-ratio: 1; z-index: 3; }
+.iv-banana svg, .iv-pneu svg, .iv-raio svg { width: 100%; height: 100%; display: block; }
+.iv-girando { animation: gira .25s linear infinite; transform-origin: center; }
+.iv-raio { width: clamp(3rem, 5vw, 6rem); aspect-ratio: 1 / 2; z-index: 4; filter: drop-shadow(0 0 18px #ffe14d); }
+.iv-clarao { position: absolute; inset: 0; background: #fffbe0; z-index: 6; pointer-events: none; }
+.iv-ima { position: absolute; left: 50%; bottom: 100%; width: 32%; aspect-ratio: 1; filter: drop-shadow(0 0 10px rgba(217,72,59,.8)); }
+.iv-ima svg { width: 100%; height: 100%; }
+.iv-pancada { position: absolute; z-index: 5; font-family: var(--f-display); font-weight: 800; font-size: clamp(1.6rem, 3vw, 3.4rem);
+  color: #111; background: var(--amarelo); padding: .1em .45em; border-radius: 8px; border: 3px solid #111; white-space: nowrap; box-shadow: 4px 4px 0 #111; }
+
+/* dados apurados até: destaque no topo, legível de longe */
+.ind.apurado { border-color: var(--amarelo); background: rgba(242, 195, 53, 0.1); }
+.ind.apurado span { display: block; color: var(--amarelo); font-weight: 700; }
+.ind.apurado b { font-size: 1.7rem; color: var(--texto); }
+
+/* gestão: corte, motivo, registro */
+.corte-box, .motivo { display: flex; flex-direction: column; gap: 0.35rem; max-width: 70ch; }
+.corte-box input, .motivo textarea { background: #0f1317; border: 1px solid var(--borda); border-radius: 6px; padding: 0.4rem 0.55rem; color: var(--texto); }
+.corte-box input { width: 11rem; }
+.motivo textarea { resize: vertical; font: inherit; }
+.g-sub { margin: 0.4rem 0 0; font-size: 1rem; }
+.selo { display: inline-block; font-size: 0.68rem; font-weight: 700; color: #111; background: var(--amarelo); border-radius: 3px; padding: 0.05rem 0.3rem; margin-left: 0.3rem; }
+table.t td.mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.8rem; }
+table.t td.quebra { white-space: normal; min-width: 14rem; }
+
+/* botão de saída do modo TV: só aparece quando o mouse mexe */
+.sair-tv { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: none; }
+body.tv .sair-tv.ve { display: block; }
+.site-box { display: flex; flex-direction: column; gap: 0.45rem; }
+</style></head><body>
+<script type="application/json" id="estado">{"versao":1,"campanha":{"inicio":"2026-10-01","fim":"2026-12-18","baseFim":"2026-10-08","feriados":["2026-10-12","2026-11-02","2026-11-20"],"taxaCasa":0.925,"vazamento":0.95,"priorN":10,"minResolv":30,"leadMin":60,"corteElegivel":0.82,"faixas":[[0.97,1.1],[0.95,1.05],[0.9,1],[0.86,0.9],[0.82,0.75],[0,0.5]],"congelaEm":"2026-10-17"},"classes":{"A":10,"B":12,"C":14,"D":17,"E":22,"F":30},"grupos":["Digital","Presencial","USG e coleta"],"participantes":[{"id":"fabricio","nome":"Fabrício","prefixo":"JOSE FABRICIO","horas":40,"classe":"A","grupo":"Digital","ausencias":["2026-10-05","2026-10-06","2026-10-07"],"cor":"#E4572E","foto":"data:image/jpeg;base64,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"},{"id":"rayssa","nome":"Rayssa","prefixo":"RAYSSA","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#F3A712","foto":null},{"id":"eduarda","nome":"Eduarda","prefixo":"EDUARDA ELLEN","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#29B6F6","foto":null},{"id":"fernanda","nome":"Fernanda","prefixo":"ANA FERNANDA","horas":20,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#8E7CC3","foto":null},{"id":"ester","nome":"Ester","prefixo":"ESTER","horas":18,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#4CB944","foto":null},{"id":"debora","nome":"Débora","prefixo":"DEBORA","horas":24,"classe":"B","grupo":"Presencial","ausencias":[],"cor":"#E86A92","foto":null},{"id":"junior","nome":"Júnior","prefixo":"JOSE GERALDO","horas":21,"classe":"C","grupo":"Presencial","ausencias":[],"cor":"#2EC4B6","foto":null},{"id":"taniely","nome":"Taniely","prefixo":"TANIELY","horas":14,"classe":"D","grupo":"Presencial","ausencias":[],"cor":"#FF8C42","foto":null},{"id":"yury","nome":"Yury","prefixo":"YURY","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#5C80BC","foto":null},{"id":"bruna","nome":"Bruna","prefixo":"BRUNA MANOELA","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#FFB3C6","foto":null},{"id":"darliane","nome":"Darliane","prefixo":"DARLIANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#C2B280","foto":null},{"id":"gerlane","nome":"Gerlane","prefixo":"GERLANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#D7263D","foto":null},{"id":"victoria","nome":"Victoria","prefixo":"VICTORIA","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#1B998B","foto":null},{"id":"thaiane","nome":"Thaiane","prefixo":"THAIANE","horas":5,"classe":"F","grupo":"Presencial","ausencias":[],"cor":"#F46036","foto":null},{"id":"alexandra","nome":"Alexandra","prefixo":"ALEXANDRA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#A23B72","foto":null},{"id":"alicia","nome":"Alícia","prefixo":"ALICIA DA SILVA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#3E92CC","foto":null},{"id":"milena","nome":"Milena","prefixo":"MARIA MILENA","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#C5D86D","foto":null},{"id":"conceicao","nome":"Conceição","prefixo":"CONCEICAO","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#E0A458","foto":null},{"id":"vivian","nome":"Vivian","prefixo":"VIVIAN","horas":2,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#9A8F97","foto":null}],"placar":{"corte":"2026-10-15","ultimoCadastro":"2026-10-15","geradoEm":"2026-10-15T14:03:34.177Z","linhasLidas":2022,"agendamentos":1076,"validos":1001,"foraDosParticipantes":30,"excluidos":{"lead":59,"erro":14,"dup":2},"remarcacoes":{"transferidas":3,"ambiguas":0},"exameDe":"2026-10-01","exameAte":"2026-11-06","linhas":{"fabricio":{"validos":97,"ef":44,"fa":7,"pend":39,"canc":7},"rayssa":{"validos":162,"ef":91,"fa":7,"pend":61,"canc":3},"eduarda":{"validos":129,"ef":80,"fa":10,"pend":37,"canc":2},"fernanda":{"validos":33,"ef":17,"fa":3,"pend":11,"canc":2},"ester":{"validos":59,"ef":37,"fa":6,"pend":13,"canc":3},"debora":{"validos":69,"ef":48,"fa":3,"pend":13,"canc":5},"junior":{"validos":38,"ef":31,"fa":2,"pend":5,"canc":0},"taniely":{"validos":45,"ef":27,"fa":3,"pend":12,"canc":3},"yury":{"validos":54,"ef":23,"fa":5,"pend":25,"canc":1},"bruna":{"validos":59,"ef":27,"fa":2,"pend":30,"canc":0},"darliane":{"validos":63,"ef":30,"fa":3,"pend":28,"canc":2},"gerlane":{"validos":45,"ef":27,"fa":2,"pend":16,"canc":0},"victoria":{"validos":54,"ef":22,"fa":2,"pend":29,"canc":1},"thaiane":{"validos":9,"ef":6,"fa":0,"pend":3,"canc":0},"alexandra":{"validos":8,"ef":6,"fa":1,"pend":1,"canc":0},"alicia":{"validos":30,"ef":13,"fa":3,"pend":14,"canc":0},"milena":{"validos":1,"ef":1,"fa":0,"pend":0,"canc":0},"conceicao":{"validos":12,"ef":5,"fa":0,"pend":6,"canc":1},"vivian":{"validos":4,"ef":2,"fa":0,"pend":2,"canc":0}},"arquivo":{"nome":"agendamentos_1.xlsx","hash":"24824f3b200dd9e3"},"importadoPor":null},"historico":[{"data":"2026-10-08","u":{"fabricio":43,"rayssa":116,"eduarda":76,"fernanda":15,"ester":44,"debora":44,"junior":31,"taniely":28,"yury":27,"bruna":25,"darliane":44,"gerlane":24,"victoria":17,"thaiane":6,"alexandra":5,"alicia":12,"milena":1,"conceicao":5,"vivian":0}},{"data":"2026-10-15","u":{"fabricio":83,"rayssa":152,"eduarda":117,"fernanda":28,"ester":50,"debora":61,"junior":36,"taniely":39,"yury":48,"bruna":57,"darliane":58,"gerlane":43,"victoria":51,"thaiane":9,"alexandra":7,"alicia":27,"milena":1,"conceicao":11,"vivian":4}}]}</script>
+<div id="app"></div>
+<script id="calc-src">/* ===== Apuração — funções puras (mesmas regras do apuracao.py) ===== */
+var Calc = (function () {
+  function norm(s) {
+    return String(s == null ? "" : s).normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().trim();
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function dkey(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function parseDia(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function addDias(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); return x; }
+
+  function modalidade(r) {
+    r = norm(r);
+    var map = [["USG", "USG"], ["RESSON", "RM"], ["TOMOG", "TC"], ["RX", "RX/MMG/DO"], ["CONSULTA", "CONSULTA"],
+      ["CORE", "PROCED"], ["HISTERO", "PROCED"], ["ENMG", "ENMG"]];
+    for (var i = 0; i < map.length; i++) if (r.indexOf(map[i][0]) >= 0) return map[i][1];
+    return "OUTRO";
+  }
+
+  /* dias-equivalentes entre a e b (inclusive): útil = 1, sábado = 0,5, domingo e feriado = 0 */
+  function diasEquiv(a, b, feriados) {
+    var f = {}; (feriados || []).forEach(function (x) { f[x] = 1; });
+    var t = 0, d = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+    while (d <= b) {
+      var w = d.getDay(), k = dkey(d);
+      if (!f[k]) t += (w === 6 ? 0.5 : (w === 0 ? 0 : 1));
+      d = addDias(d, 1);
+    }
+    return t;
+  }
+  function diasEquivLista(datas, feriados) {
+    var f = {}; (feriados || []).forEach(function (x) { f[x] = 1; });
+    var t = 0;
+    (datas || []).forEach(function (s) {
+      var d = parseDia(s), w = d.getDay();
+      if (!f[s]) t += (w === 6 ? 0.5 : (w === 0 ? 0 : 1));
+    });
+    return t;
+  }
+
+  function toDate(v) {
+    if (v instanceof Date) return v;
+    if (typeof v === "number") return new Date(Math.round((v - 25569) * 86400000) + new Date().getTimezoneOffset() * 60000);
+    if (typeof v === "string" && /^\d{2}\/\d{2}\/\d{4}/.test(v)) {
+      var m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+      return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+    }
+    if (typeof v === "string" && v) { var d = new Date(v); if (!isNaN(d)) return d; }
+    return null;
+  }
+
+  var COLS = ["Isn agenda", "Data do agendamento", "Hora do agendamento", "Empresa", "Recurso", "Paciente",
+    "Data de nascimento", "Status", "Motivo do cancelamento", "Usuário que cadastrou", "Data de cadastro"];
+
+  /* rows: objetos de XLSX.utils.sheet_to_json — devolve só contagens por pessoa, nunca dados de paciente */
+  function apurar(rows, cfg) {
+    var faltando = COLS.filter(function (c) { return !rows.length || !(c in rows[0]); });
+    if (faltando.length) throw new Error("A planilha não tem as colunas: " + faltando.join(", ") + ". Exporte o relatório de agendamentos completo do Naja.");
+    var inicio = parseDia(cfg.campanha.inicio), fimDia = parseDia(cfg.campanha.fim);
+    var fim = new Date(fimDia.getFullYear(), fimDia.getMonth(), fimDia.getDate(), 23, 59, 59);
+    var baseAte = addDias(parseDia(cfg.campanha.baseFim), 1);
+
+    var grupos = {}, lidas = 0, cadMax = null;
+    rows.forEach(function (r) {
+      if (!r["Empresa"]) return;
+      lidas++;
+      var dAg = toDate(r["Data do agendamento"]), cad = toDate(r["Data de cadastro"]);
+      if (!dAg || !cad) return;
+      var h = String(r["Hora do agendamento"] == null ? "0" : r["Hora do agendamento"]).replace(/\D/g, "");
+      while (h.length < 4) h = "0" + h;
+      var ex = new Date(dAg.getFullYear(), dAg.getMonth(), dAg.getDate(), +h.slice(0, 2), +h.slice(2, 4));
+      var mod = modalidade(r["Recurso"]);
+      var key = String(r["Isn agenda"]) + "|" + mod;
+      if (!cadMax || cad > cadMax) cadMax = cad;
+      var g = grupos[key];
+      if (!g) grupos[key] = g = { rows: [] };
+      g.rows.push({ ex: ex, cad: cad, r: r, mod: mod });
+    });
+
+    var corte = cfg.corte ? parseDia(cfg.corte) : new Date(cadMax.getFullYear(), cadMax.getMonth(), cadMax.getDate());
+    var uns = [];
+    Object.keys(grupos).forEach(function (k) {
+      var rs = grupos[k].rows.slice().sort(function (a, b) { return a.ex - b.ex; });
+      var f = rs[0], r = f.r;
+      var nasc = toDate(r["Data de nascimento"]);
+      uns.push({
+        user: norm(r["Usuário que cadastrou"]), status: String(r["Status"] || ""),
+        motivo: norm(r["Motivo do cancelamento"]), mod: f.mod, cad: f.cad, ex: f.ex, isn: String(r["Isn agenda"]),
+        pk: norm(r["Paciente"]) + "|" + (nasc ? dkey(nasc) : String(r["Data de nascimento"] || ""))
+      });
+    });
+
+    uns = uns.filter(function (u) { return u.status !== "Pré-agendado" && u.user !== "SISTEMA"; });
+    uns.forEach(function (u) {
+      if (u.status === "Cancelado") u.res = u.motivo.indexOf("DESIST") >= 0 ? "cancel_pac" : "cancel_erro";
+      else if (u.status === "Atendido na recepção" || u.status === "Aguardando na recepção") u.res = "compareceu";
+      else if (new Date(u.ex.getFullYear(), u.ex.getMonth(), u.ex.getDate()) < corte) u.res = "falta";
+      else u.res = "pendente";
+      u.lead = (u.ex - u.cad) / 60000;
+      u.dia = dkey(u.ex);
+    });
+    uns = uns.filter(function (u) { return u.cad >= inicio && u.ex >= inicio && u.ex <= fim; });
+
+    uns.forEach(function (u) {
+      u.excl = "";
+      if (u.lead < cfg.campanha.leadMin) u.excl = "lead";
+      if (u.res === "cancel_erro") u.excl = "erro";
+    });
+    var vistos = {};
+    uns.filter(function (u) { return !u.excl; }).sort(function (a, b) { return a.cad - b.cad; }).forEach(function (u) {
+      var k = u.pk + "|" + u.dia + "|" + u.mod;
+      if (vistos[k]) u.excl = "dup"; else vistos[k] = 1;
+    });
+    // remarcação: o crédito volta para quem fez o agendamento original
+    var canc = uns.filter(function (u) { return u.res === "cancel_pac"; })
+      .map(function (u) { return { pk: u.pk, mod: u.mod, cad: u.cad, user: u.user }; });
+    var trinta = 30 * 86400000, remarc = { transferidas: 0, ambiguas: 0 };
+    uns.forEach(function (u) {
+      if (u.excl || u.res === "cancel_pac") return;
+      var c = canc.filter(function (x) {
+        return x.pk === u.pk && x.mod === u.mod && x.cad < u.cad && x.cad >= u.cad - trinta && x.user !== u.user;
+      }).sort(function (a, b) { return a.cad - b.cad; });
+      if (c.length) {
+        var donos = {}; c.forEach(function (x) { donos[x.user] = 1; });
+        u.de = u.user; u.user = c[c.length - 1].user;
+        u.ambigua = Object.keys(donos).length > 1;
+        remarc.transferidas++; if (u.ambigua) remarc.ambiguas++;
+      }
+    });
+
+    var linhas = {}, base = {}, casados = 0;
+    var validos = uns.filter(function (u) { return !u.excl; });
+    cfg.participantes.forEach(function (p) {
+      var pref = norm(p.prefixo);
+      var s = validos.filter(function (u) { return u.user.indexOf(pref) === 0; });
+      s.forEach(function (u) { u.dono = p.nome; });
+      casados += s.length;
+      var c = { validos: s.length, ef: 0, fa: 0, pend: 0, canc: 0 };
+      s.forEach(function (u) {
+        if (u.res === "compareceu") c.ef++; else if (u.res === "falta") c.fa++;
+        else if (u.res === "pendente") c.pend++; else if (u.res === "cancel_pac") c.canc++;
+      });
+      linhas[p.id] = c;
+      base[p.id] = s.filter(function (u) { return u.cad <= baseAte; }).length;
+    });
+    var exc = { lead: 0, erro: 0, dup: 0 };
+    uns.forEach(function (u) { if (u.excl) exc[u.excl]++; });
+    var exs = uns.map(function (u) { return u.ex; });
+    /* relatório de exceções: só número da agenda, modalidade, datas e usuário do Naja; nunca nome de paciente.
+       Fica fora do placar publicado (o app descarta antes de publicar). */
+    var MOT = { lead: "criado a menos de " + cfg.campanha.leadMin + " min do exame", erro: "cancelado por erro de marcação", dup: "duplicidade (mesmo paciente, dia e modalidade)" };
+    function hora(d) { return dkey(d) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+    var excecoes = [];
+    uns.forEach(function (u) {
+      var base = { isn: u.isn, mod: u.mod, exame: hora(u.ex), cadastro: hora(u.cad) };
+      if (u.excl) excecoes.push(Object.assign({ tipo: "excluído", usuario: u.user, credito: "", obs: MOT[u.excl] }, base));
+      else if (u.de) excecoes.push(Object.assign({ tipo: u.ambigua ? "remarcação AMBÍGUA, revisar" : "remarcação", usuario: u.de, credito: u.dono || u.user,
+        obs: u.ambigua ? "mais de uma desistência compatível nos 30 dias anteriores, de usuários diferentes" : "desistência do mesmo paciente e modalidade nos 30 dias anteriores" }, base));
+      else if (!u.dono) excecoes.push(Object.assign({ tipo: "fora dos participantes", usuario: u.user, credito: "", obs: "usuário do Naja não bate com nenhum prefixo cadastrado" }, base));
+    });
+    return {
+      corte: dkey(corte),
+      ultimoCadastro: cadMax ? dkey(cadMax) : null,
+      geradoEm: new Date().toISOString(),
+      linhasLidas: lidas,
+      agendamentos: uns.length,
+      validos: validos.length,
+      foraDosParticipantes: validos.length - casados,
+      excluidos: exc,
+      remarcacoes: remarc,
+      excecoes: excecoes,
+      exameDe: exs.length ? dkey(new Date(Math.min.apply(null, exs))) : null,
+      exameAte: exs.length ? dkey(new Date(Math.max.apply(null, exs))) : null,
+      linhas: linhas,
+      base: base
+    };
+  }
+
+  function multQualidade(t, faixas) {
+    for (var i = 0; i < faixas.length; i++) if (t >= faixas[i][0]) return faixas[i][1];
+    return faixas[faixas.length - 1][1];
+  }
+
+  /* pontos confirmados = compareceram × valor da classe × multiplicador de qualidade;
+     pontos a confirmar = agendados ainda por vir × valor da classe (sem multiplicador);
+     pista = confirmados + a confirmar. Na apuração final (18/12) não sobra nada a confirmar. */
+  function derivar(estado) {
+    var c = estado.campanha;
+    var pessoas = estado.participantes.map(function (p) {
+      var l = (estado.placar && estado.placar.linhas[p.id]) || { validos: 0, ef: 0, fa: 0, pend: 0, canc: 0 };
+      var resolv = l.ef + l.fa;
+      var taxaAj = (l.ef + c.taxaCasa * c.priorN) / (resolv + c.priorN);
+      var mult = resolv >= c.minResolv ? multQualidade(taxaAj, c.faixas) : 1;
+      var pts = estado.classes[p.classe];
+      var ptsReal = Math.round(l.ef * pts * mult), ptsPend = Math.round(l.pend * pts);
+      return {
+        p: p, l: l, taxaBruta: resolv ? l.ef / resolv : null, taxaAj: taxaAj, mult: mult, emCalibracao: resolv < c.minResolv,
+        pts: pts, ptsReal: ptsReal, ptsPend: ptsPend, ptsPista: ptsReal + ptsPend,
+        elegivel: taxaAj >= c.corteElegivel || resolv < c.minResolv
+      };
+    });
+    pessoas.sort(function (a, b) { return b.ptsPista - a.ptsPista || b.ptsReal - a.ptsReal || a.p.nome.localeCompare(b.p.nome, "pt-BR"); });
+    pessoas.forEach(function (x, i) { x.pos = i + 1; });
+    var max = pessoas.length ? Math.max(1, pessoas[0].ptsPista) : 1;
+    var tot = { ef: 0, pend: 0 };
+    pessoas.forEach(function (x) { tot.ef += x.l.ef; tot.pend += x.l.pend; });
+    return { pessoas: pessoas, max: max, tot: tot };
+  }
+
+  /* volta mais rápida: quem mais somou pontos na pista nos últimos ~7 dias */
+  function voltaRapida(estado, der) {
+    var h = (estado.historico || []).slice().sort(function (a, b) { return a.data < b.data ? -1 : 1; });
+    if (h.length < 2) return null;
+    var ult = h[h.length - 1], dUlt = parseDia(ult.data);
+    var alvo = addDias(dUlt, -7), ref = null;
+    h.forEach(function (e) { if (parseDia(e.data) <= alvo) ref = e; });
+    if (!ref) { ref = h[0]; if ((dUlt - parseDia(ref.data)) / 86400000 < 3) return null; }
+    var melhor = null;
+    der.pessoas.forEach(function (x) {
+      var ganho = Math.round(((ult.u[x.p.id] || 0) - (ref.u[x.p.id] || 0)) * x.pts);
+      if (!melhor || ganho > melhor.ganho) melhor = { x: x, ganho: ganho };
+    });
+    if (!melhor || melhor.ganho <= 0) return null;
+    melhor.dias = Math.round((dUlt - parseDia(ref.data)) / 86400000);
+    return melhor;
+  }
+
+  return { apurar: apurar, derivar: derivar, voltaRapida: voltaRapida, diasEquiv: diasEquiv, parseDia: parseDia, dkey: dkey, norm: norm };
+})();
+if (typeof module !== "undefined") module.exports = Calc;
+</script>
+<script id="app-src">/* ===== Painel — interface ===== */
+(function () {
+  var ESTADO = JSON.parse(document.getElementById("estado").textContent);
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+  /* modo TV: pelo endereço (#tv) ou pelo botão, lembrado só neste navegador */
+  var TV = location.hash === "#tv" || lsGet("campeao.modoTV") === "1";
+  var cap = { artifact: null, podeEditar: false, user: null, downloads: null, eu: null };
+  var app = document.getElementById("app");
+  var REDUZ = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  if (TV) document.body.classList.add("tv");
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function num(x, d) { return Number(x).toLocaleString("pt-BR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  function dataBR(s) { if (!s) return "—"; var p = s.split("-"); return p[2] + "/" + p[1]; }
+  function dataBRano(s) { if (!s) return "—"; var p = s.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+  function hojeKey() { return Calc.dkey(new Date()); }
+  function quando(iso) { return new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }); }
+  function congelado() { var c = ESTADO.campanha.congelaEm; return !!c && hojeKey() >= c; }
+  function iniciais(n) { var p = String(n).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : "")).toUpperCase(); }
+  function diasAte(fim) {
+    var hoje = new Date(); hoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    return Math.max(0, Math.round((Calc.parseDia(fim) - hoje) / 86400000));
+  }
+
+  /* ---------- fotos ilustrativas (até subir as fotos reais) ---------- */
+  var PELES = ["#f2c9a8", "#e0ac84", "#c98d62", "#a96d45", "#7f4b2e", "#f6d6bd"];
+  var CABELOS = ["#2a1c13", "#4b2f1d", "#161616", "#6c3f26", "#a8733b", "#3a2418"];
+  var MASC = { fabricio: 1, junior: 1, yury: 1 };
+  var cacheDemo = {};
+  function fotoDemo(p) {
+    if (cacheDemo[p.id]) return cacheDemo[p.id];
+    var h = 0; for (var i = 0; i < p.id.length; i++) h = (h * 31 + p.id.charCodeAt(i)) >>> 0;
+    var pele = PELES[h % PELES.length], cab = CABELOS[(h >> 3) % CABELOS.length];
+    var estilo = MASC[p.id] ? "curto" : ["longo", "coque", "cacheado", "longo"][(h >> 5) % 4];
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#dfe7ee"/>';
+    if (estilo === "longo") s += '<path d="M23 52 Q21 20 50 18 Q79 20 77 52 L79 92 Q50 99 21 92 Z" fill="' + cab + '"/>';
+    if (estilo === "coque") s += '<circle cx="50" cy="15" r="11" fill="' + cab + '"/>';
+    if (estilo === "cacheado") [[30, 30], [40, 22], [52, 19], [63, 23], [71, 32], [26, 44], [74, 45], [28, 58], [72, 58]].forEach(function (c) { s += '<circle cx="' + c[0] + '" cy="' + c[1] + '" r="10" fill="' + cab + '"/>'; });
+    s += '<path d="M14 100 Q16 76 50 74 Q84 76 86 100 Z" fill="' + p.cor + '"/>';
+    s += '<rect x="43" y="66" width="14" height="12" rx="5" fill="' + pele + '"/>';
+    s += '<ellipse cx="50" cy="50" rx="22" ry="25" fill="' + pele + '"/>';
+    s += estilo === "curto"
+      ? '<path d="M28 47 Q28 22 50 22 Q72 22 72 47 Q66 32 50 31 Q35 32 28 47 Z" fill="' + cab + '"/>'
+      : '<path d="M27 50 Q27 23 50 23 Q73 23 73 50 Q68 34 52 33 Q40 36 27 50 Z" fill="' + cab + '"/>';
+    s += '<circle cx="41.5" cy="51" r="2.8" fill="#1d1d1d"/><circle cx="58.5" cy="51" r="2.8" fill="#1d1d1d"/>' +
+      '<circle cx="36" cy="59" r="3.5" fill="#e88" opacity=".35"/><circle cx="64" cy="59" r="3.5" fill="#e88" opacity=".35"/>' +
+      '<path d="M42 62 Q50 69 58 62" stroke="#6b2d2d" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>';
+    return (cacheDemo[p.id] = "data:image/svg+xml;utf8," + encodeURIComponent(s));
+  }
+  function foto(p) { return p.foto || fotoDemo(p); }
+  var temIlustrativa = function () { return ESTADO.participantes.some(function (p) { return !p.foto; }); };
+
+  function avatar(p, cls) {
+    return '<div class="avatar' + (cls ? " " + cls : "") + '" style="border-color:' + esc(p.cor) + '"><img alt="" src="' + esc(foto(p)) + '"></div>';
+  }
+
+  var uid = 0;
+  function carro(p) {
+    var id = "cl" + (uid++);
+    return '<svg viewBox="0 0 80 36" aria-hidden="true"><g class="corpo">' +
+      '<rect x="1" y="13" width="7" height="3.2" rx="1" fill="#111"/><rect x="3.5" y="15" width="2" height="6" fill="#111"/>' +
+      '<path d="M5 25 L9 17 Q13 13.5 22 13.5 L46 13.5 Q52 13.5 57 18 L71 20 Q77 21 77 25.5 L77 28.5 L5 28.5 Z" fill="' + esc(p.cor) + '"/>' +
+      '<path d="M46 13.5 Q52 13.5 57 18 L46 18 Z" fill="rgba(0,0,0,.28)"/>' +
+      '<rect x="62" y="23" width="13" height="2" rx="1" fill="rgba(255,255,255,.55)"/>' +
+      '<clipPath id="' + id + '"><circle cx="36" cy="10" r="9"/></clipPath><circle cx="36" cy="10" r="10.6" fill="#ece6d8"/>' +
+      '<image href="' + esc(foto(p)) + '" x="27" y="1" width="18" height="18" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')"/></g>' +
+      roda(20) + roda(63) + '</svg>';
+  }
+  function roda(cx) {
+    return '<g class="roda"><circle cx="' + cx + '" cy="28.5" r="6.3" fill="#0b0b0b"/><circle cx="' + cx + '" cy="28.5" r="2.7" fill="#8b929a"/>' +
+      '<rect x="' + (cx - 0.6) + '" y="22.6" width="1.2" height="3.4" fill="#c9ced3"/><rect x="' + (cx - 0.6) + '" y="31" width="1.2" height="3.4" fill="#c9ced3"/>' +
+      '<rect x="' + (cx - 5.9) + '" y="27.9" width="3.4" height="1.2" fill="#c9ced3"/><rect x="' + (cx + 2.5) + '" y="27.9" width="3.4" height="1.2" fill="#c9ced3"/></g>';
+  }
+
+  /* ---------- tela principal ---------- */
+  var ultimaDer = null;
+  function render() {
+    var der = Calc.derivar(ESTADO), c = ESTADO.campanha, pl = ESTADO.placar;
+    ultimaDer = der;
+    var podio = der.pessoas.slice(0, 3);
+    var volta = Calc.voltaRapida(ESTADO, der);
+    function xPos(pts) { return pts / der.max * 82; }
+
+    var h = '';
+    h += '<header class="topo"><div class="marca"><div class="bandeira" aria-hidden="true"></div><div><h1>Campeão de Agendamentos</h1>' +
+      '<small>Temporada ' + dataBR(c.inicio) + ' a ' + dataBR(c.fim) + ' · IMAG</small></div></div>' +
+      '<div class="indicadores">' +
+      '<div class="ind apurado"><span>Dados apurados até</span><b>' + (pl ? dataBRano(pl.corte) : '—') + '</b></div>' +
+      '<div class="ind"><b>' + diasAte(c.fim) + '</b><span>dias para a bandeirada</span></div>' +
+      '<div class="ind"><b>' + num(der.tot.ef) + '</b><span>pacientes compareceram</span></div>' +
+      '<div class="ind"><b>' + num(der.tot.pend) + '</b><span>agendados por vir</span></div>' +
+      '</div><div class="acoes">' +
+      '<button class="btn" id="b-intervalo" type="button">Ver intervalo</button>' +
+      '<button class="btn" id="b-tela" type="button">Tela cheia</button>' +
+      '<button class="btn" id="b-tv" type="button">Modo TV</button>' +
+      (cap.podeEditar ? '<button class="btn forte so-gestao" id="b-gestao" type="button">Gestão</button>' : '') +
+      '</div></header>';
+
+    h += '<main class="corpo"><section class="pista" aria-label="Pista: posição de cada pessoa pelos pontos">';
+    h += '<div class="regua"><div>Posição</div><div class="escala"><span style="left:0;transform:none">Largada</span>' +
+      '<span style="right:0;left:auto;transform:none">Bandeirada ' + dataBR(c.fim) + '</span></div></div>';
+    h += '<div class="raias">';
+    der.pessoas.forEach(function (x, i) {
+      var p = x.p, par = i % 2 ? " par" : "", top = i < 3 ? " top" + (i + 1) : "";
+      var vel = (0.22 + (i / Math.max(1, der.pessoas.length - 1)) * 0.38).toFixed(2);
+      h += '<div class="rotulo' + par + top + '" style="grid-row:' + (i + 1) + ';grid-column:1"><span class="posn">' + x.pos + 'º</span>' +
+        avatar(p) + '<span class="nome">' + esc(p.nome) + '</span></div>';
+      h += '<div class="raia' + par + '" style="grid-row:' + (i + 1) + ';grid-column:2">' +
+        '<div class="rastro real" style="background:' + esc(p.cor) + ';width:' + xPos(x.ptsReal) + '%"></div>' +
+        '<div class="rastro agendado" style="color:' + esc(p.cor) + ';left:' + xPos(x.ptsReal) + '%;width:' + Math.max(0, xPos(x.ptsPista) - xPos(x.ptsReal)) + '%"></div>' +
+        '<div class="carro" style="--vel:' + vel + 's" data-x="' + xPos(x.ptsPista) + '"><div class="vento"><i></i><i></i><i></i></div>' + carro(p) + '</div>' +
+        '<div class="etiqueta" data-x="' + xPos(x.ptsPista) + '">' + num(x.ptsPista) + '</div></div>';
+    });
+    h += '<div class="sobre" style="grid-row:1 / span ' + der.pessoas.length + '"><div class="largada"></div><div class="chegada"></div></div></div>';
+    h += '<div class="legenda"><span><i class="l-real"></i>Pontos confirmados (paciente compareceu)</span><span><i class="l-ag"></i>Pontos a confirmar (agendados por vir)</span>' +
+      (temIlustrativa() ? '<span>Fotos ilustrativas até subir as fotos reais</span>' : '') + '</div>';
+    h += '</section>';
+
+    h += '<aside class="lateral"><section class="bloco"><h2>Pódio</h2><div class="podio">';
+    podio.forEach(function (x, i) {
+      h += '<div class="lugar p' + (i + 1) + '"><div class="pos">' + (i + 1) + 'º</div>' + avatar(x.p) +
+        '<div class="quem">' + esc(x.p.nome) + '</div><div class="pts">' + num(x.ptsPista) + '<small>pontos</small></div></div>';
+    });
+    h += '</div></section>';
+    h += '<section class="bloco"><h2>Volta mais rápida</h2>';
+    if (volta) h += '<div class="volta">' + avatar(volta.x.p) + '<div><b>' + esc(volta.x.p.nome) + '</b><span>+' + num(volta.ganho) +
+      ' pontos nos últimos ' + volta.dias + ' dias</span></div></div>';
+    else h += '<p class="vazio">Aparece a partir da segunda semana de placar: quem mais somou pontos em 7 dias.</p>';
+    h += '</section>';
+    h += '<section class="bloco"><h2>Como funciona</h2><ul class="regras">' +
+      '<li>Agendou, o carro anda. Se o paciente faltar ou desistir, ele volta.</li>' +
+      '<li>Quem tem menos tempo para agendar ganha mais pontos por agendamento.</li>' +
+      '<li>Paciente que compareceu confirma os pontos. Pouca falta dá bônus nos pontos confirmados; muita falta tira.</li>' +
+      '<li>Campeão em ' + dataBR(c.fim) + ': folga na semana entre o Natal e o Ano Novo.</li></ul></section>';
+    h += '<p class="rodape">' + (pl ? 'Exportação do Naja de ' + dataBRano(pl.corte) + ' · placar publicado em ' + quando(pl.geradoEm) +
+      '. Falta só conta para exames até a véspera dessa data.' : 'Sem placar publicado ainda.') + '</p>';
+    h += '</aside></main>';
+    app.innerHTML = h;
+
+    var carros = app.querySelectorAll(".carro"), etiq = app.querySelectorAll(".etiqueta");
+    function posiciona() {
+      carros.forEach(function (el, i) {
+        el.style.transitionDelay = REDUZ ? "0s" : (i * 0.07) + "s";
+        el.style.left = "max(4.9rem, " + el.dataset.x + "%)";
+      });
+      etiq.forEach(function (el, i) {
+        el.style.transitionDelay = REDUZ ? "0s" : (i * 0.07) + "s";
+        el.style.left = "max(4.9rem, " + el.dataset.x + "%)";
+      });
+    }
+    if (REDUZ) posiciona(); else requestAnimationFrame(function () { requestAnimationFrame(posiciona); });
+
+    var bt = document.getElementById("b-tela");
+    if (bt) bt.onclick = function () {
+      var d = document.documentElement;
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      else if (d.requestFullscreen) d.requestFullscreen().catch(function () {});
+      ligarTela();
+    };
+    var btv = document.getElementById("b-tv");
+    if (btv) btv.onclick = function () { modoTV(true); };
+    var bi = document.getElementById("b-intervalo");
+    if (bi) bi.onclick = function () { tocarIntervalo(); };
+    var bg = document.getElementById("b-gestao");
+    if (bg) bg.onclick = abrirGestao;
+  }
+
+  function modoTV(on) {
+    TV = on; lsSet("campeao.modoTV", on ? "1" : null);
+    document.body.classList.toggle("tv", on);
+    if (on) { ligarTela(); var d = document.documentElement; if (!document.fullscreenElement && d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
+    render();
+  }
+  /* no modo TV os botões somem; mexer o mouse mostra "Sair do modo TV" por alguns segundos */
+  var sairTV = document.createElement("button"), sairTimer = null;
+  sairTV.type = "button"; sairTV.className = "btn sair-tv"; sairTV.textContent = "Sair do modo TV";
+  sairTV.onclick = function () { sairTV.classList.remove("ve"); if (document.fullscreenElement) document.exitFullscreen().catch(function () {}); modoTV(false); };
+  document.body.appendChild(sairTV);
+  document.addEventListener("mousemove", function () {
+    if (!TV) return;
+    sairTV.classList.add("ve"); clearTimeout(sairTimer);
+    sairTimer = setTimeout(function () { sairTV.classList.remove("ve"); }, 4000);
+  });
+
+  var trava = null;
+  function ligarTela() {
+    try { if (navigator.wakeLock && !trava) navigator.wakeLock.request("screen").then(function (t) { trava = t; t.addEventListener("release", function () { trava = null; }); }).catch(function () {}); } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") ligarTela(); });
+
+  /* ================= abertura e intervalo ================= */
+  var timers = [], tela = null;
+  function depois(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function el(tag, cls, pai, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; if (pai) pai.appendChild(e); return e; }
+  function anim(e, kf, dur, delay, ease) { return e.animate(kf, { duration: dur, delay: delay || 0, fill: "forwards", easing: ease || "cubic-bezier(.3,.7,.3,1)" }); }
+  function fechaTela() {
+    timers.forEach(clearTimeout); timers = [];
+    if (tela) { var t = tela; tela = null; anim(t, [{ opacity: 1 }, { opacity: 0 }], 400).onfinish = function () { t.remove(); }; }
+  }
+  function abreTela() {
+    if (tela) { timers.forEach(clearTimeout); timers = []; tela.remove(); }
+    tela = el("div", "intervalo", document.body);
+    tela.setAttribute("role", "dialog"); tela.setAttribute("aria-label", "Intervalo da corrida");
+    tela.innerHTML = '<div class="iv-ceu"><div class="iv-arquibancada"></div></div><div class="iv-pista"><div class="iv-faixa"></div></div>' +
+      '<div class="iv-legenda"><b></b><span></span></div><button class="btn iv-pular" type="button">Pular</button>';
+    tela.querySelector(".iv-pular").onclick = fechaTela;
+    tela.addEventListener("click", function (ev) { if (ev.target === tela) fechaTela(); });
+    return tela;
+  }
+  function legenda(t, sub) {
+    if (!tela) return;
+    var b = tela.querySelector(".iv-legenda b"), s = tela.querySelector(".iv-legenda span");
+    b.textContent = t || ""; s.textContent = sub || "";
+    anim(tela.querySelector(".iv-legenda"), [{ transform: "translateY(-12px)", opacity: 0 }, { transform: "none", opacity: 1 }], 450);
+  }
+  var FAIXAS = [36, 56, 76];
+  function carroIV(p, faixa, x) {
+    var d = el("div", "iv-carro", tela.querySelector(".iv-pista"));
+    d.style.top = FAIXAS[faixa] + "%"; d.style.left = x + "%";
+    d.innerHTML = '<div class="vento"><i></i><i></i><i></i></div>' + carro(p) + '<div class="iv-nome"></div>';
+    d.querySelector(".iv-nome").textContent = p.nome;
+    return d;
+  }
+  function move(d, de, para, dur, delay, ease) { return anim(d, [{ left: de + "%" }, { left: para + "%" }], dur, delay, ease); }
+  function fogo(d, on) {
+    var f = d.querySelector(".iv-fogo");
+    if (on && !f) { f = el("div", "iv-fogo"); d.insertBefore(f, d.firstChild); }
+    if (!on && f) f.remove();
+  }
+  function faiscas(d, n) {
+    var r = d.getBoundingClientRect(), pr = tela.getBoundingClientRect();
+    for (var i = 0; i < (n || 14); i++) {
+      var s = el("i", "iv-faisca", tela);
+      s.style.left = (r.left - pr.left + r.width * 0.3) + "px"; s.style.top = (r.top - pr.top + r.height * 0.85) + "px";
+      var ang = Math.PI * (0.6 + Math.random() * 0.8), dist = 40 + Math.random() * 90;
+      anim(s, [{ transform: "translate(0,0)", opacity: 1 }, { transform: "translate(" + (Math.cos(ang) * dist) + "px," + (-Math.sin(ang) * dist * 0.6) + "px)", opacity: 0 }], 600 + Math.random() * 400, 0, "ease-out");
+    }
+  }
+  function confete() {
+    var cores = ["#f2c335", "#d9483b", "#ece6d8", "#57c48a", "#29b6f6"];
+    for (var i = 0; i < 70; i++) {
+      var s = el("i", "iv-confete", tela);
+      s.style.left = Math.random() * 100 + "%"; s.style.background = cores[i % cores.length];
+      anim(s, [{ transform: "translateY(-10vh) rotate(0deg)" }, { transform: "translateY(110vh) rotate(" + (360 + Math.random() * 720) + "deg)" }], 2400 + Math.random() * 1600, Math.random() * 900, "linear");
+    }
+  }
+  function luzes(cb) {
+    var l = el("div", "iv-luzes", tela);
+    l.innerHTML = "<i></i><i></i><i></i>";
+    var bs = l.querySelectorAll("i");
+    [0, 1, 2].forEach(function (k) { depois(500 + k * 550, function () { bs[k].className = "verm"; }); });
+    depois(2300, function () { bs.forEach(function (b) { b.className = "verde"; }); legenda("Valendo!", ""); });
+    depois(3100, function () { anim(l, [{ opacity: 1 }, { opacity: 0 }], 300); if (cb) cb(); });
+  }
+
+  /* abertura curta, ao carregar */
+  function abertura() {
+    if (REDUZ) return;
+    abreTela(); tela.classList.add("curta");
+    legenda("Campeão de Agendamentos", "Temporada " + dataBR(ESTADO.campanha.inicio) + " a " + dataBR(ESTADO.campanha.fim));
+    luzes(function () { depois(300, fechaTela); });
+  }
+
+  /* ===== clipes de 30 s: 5 intervalos, cada um com 2 cenas ===== */
+  function pista() { return tela.querySelector(".iv-pista"); }
+  function objeto(cls, html, faixa, x) {
+    var o = el("div", "iv-obj " + cls, pista()); o.innerHTML = html;
+    o.style.top = FAIXAS[faixa] + "%"; o.style.left = x + "%"; return o;
+  }
+  function deslizar(o, de, para, dur) { return anim(o, [{ left: de + "%" }, { left: para + "%" }], dur, 0, "linear"); }
+  function trocaFaixa(d, de, para, dur) { return anim(d, [{ top: FAIXAS[de] + "%" }, { top: FAIXAS[para] + "%" }], dur); }
+  function gira(d, voltas, dur) { return anim(d.querySelector("svg"), [{ transform: "rotate(0)" }, { transform: "rotate(" + (360 * voltas) + "deg)" }], dur, 0, "cubic-bezier(.2,.8,.3,1)"); }
+  function escala(d, de, para, dur) { return anim(d.querySelector("svg"), [{ transform: "scale(" + de + ")" }, { transform: "scale(" + para + ")" }], dur); }
+  function pancada(d, txt) {
+    var r = d.getBoundingClientRect(), pr = tela.getBoundingClientRect();
+    var b = el("div", "iv-pancada", tela, txt);
+    b.style.left = (r.left - pr.left + r.width / 2) + "px"; b.style.top = (r.top - pr.top) + "px";
+    anim(b, [{ transform: "translate(-50%,-50%) scale(.3) rotate(-12deg)", opacity: 0 }, { transform: "translate(-50%,-90%) scale(1.15) rotate(-6deg)", opacity: 1, offset: .35 }, { transform: "translate(-50%,-120%) scale(1) rotate(-6deg)", opacity: 0 }], 1100);
+    depois(1200, function () { b.remove(); });
+  }
+  function clarao() {
+    var f = el("div", "iv-clarao", tela);
+    anim(f, [{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }, { opacity: .7 }, { opacity: 0 }], 700, 0, "linear");
+    depois(800, function () { f.remove(); });
+  }
+  var SVG_BANANA = '<svg viewBox="0 0 60 40" aria-hidden="true"><path d="M30 30 Q14 30 6 16 Q14 22 28 22 Z" fill="#f4d03f"/><path d="M30 30 Q46 30 54 16 Q46 22 32 22 Z" fill="#f1c40f"/><path d="M28 22 Q30 6 34 22 Z" fill="#f7dc6f"/><path d="M28 22 Q31 34 33 22" fill="#e1b12c"/><rect x="29" y="2" width="3" height="6" rx="1" fill="#6b4f1d"/><ellipse cx="30" cy="34" rx="22" ry="3" fill="rgba(0,0,0,.35)"/></svg>';
+  var SVG_PNEU = '<svg viewBox="0 0 40 40" aria-hidden="true" class="iv-girando"><circle cx="20" cy="20" r="18" fill="#111"/><circle cx="20" cy="20" r="18" fill="none" stroke="#333" stroke-width="4" stroke-dasharray="4 3"/><circle cx="20" cy="20" r="8" fill="#9aa3ad"/><circle cx="20" cy="20" r="3" fill="#ece6d8"/><path d="M20 12 V28 M12 20 H28" stroke="#ece6d8" stroke-width="2"/></svg>';
+  var SVG_RAIO = '<svg viewBox="0 0 40 80" aria-hidden="true"><path d="M24 0 L6 44 H19 L12 80 L34 30 H21 L30 0 Z" fill="#ffe14d" stroke="#fff6c2" stroke-width="2"/></svg>';
+  var SVG_IMA = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 6 H16 V22 Q16 28 20 28 Q24 28 24 22 V6 H32 V22 Q32 36 20 36 Q8 36 8 22 Z" fill="#d9483b"/><rect x="8" y="6" width="8" height="6" fill="#ece6d8"/><rect x="24" y="6" width="8" height="6" fill="#ece6d8"/></svg>';
+  var SVG_CAFE = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 14 H28 L26 34 Q25 37 22 37 H14 Q11 37 10 34 Z" fill="#ece6d8"/><path d="M28 18 Q36 18 35 25 Q34 30 27 29" stroke="#ece6d8" stroke-width="3" fill="none"/><path d="M10 20 H26 L25 26 H11 Z" fill="#6b3e26"/><path d="M14 4 Q12 8 15 11 M20 3 Q18 7 21 10" stroke="#ece6d8" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+
+  /* cada cena dura 9,5 s; em(ms, fn) agenda dentro da cena */
+  var CENAS = {
+    turboDrift: function (em, c) {
+      var a, b;
+      em(0, function () { a = carroIV(c.L1, 0, -15); b = carroIV(c.L2, 1, -15); move(a, -15, 55, 1500); move(b, -15, 32, 1700);
+        legenda("Briga pela ponta!", c.L1.nome + " lidera. " + c.L2.nome + " vem colado."); });
+      em(3000, function () { fogo(b, true); legenda(c.L2.nome + " acende o turbo!", "Cada agendamento é combustível");
+        move(b, 32, 68, 1400, 0, "cubic-bezier(.5,0,.2,1)"); trocaFaixa(b, 1, 0, 700); depois(700, function () { trocaFaixa(b, 0, 1, 700); }); });
+      em(5000, function () { fogo(b, false); legenda(c.L1.nome + " segura no drift!", "A ponta não se entrega fácil");
+        anim(a.querySelector("svg"), [{ transform: "rotate(0)" }, { transform: "rotate(-14deg)" }, { transform: "rotate(-14deg)" }, { transform: "rotate(0)" }], 1500);
+        faiscas(a, 18); depois(400, function () { faiscas(a, 14); }); move(a, 55, 76, 1500); move(b, 68, 52, 1500); });
+      em(7800, function () { move(a, 76, 125, 1100, 0, "ease-in"); move(b, 52, 118, 1200, 100, "ease-in"); });
+      em(9300, function () { a.remove(); b.remove(); });
+    },
+    rampa: function (em, c) {
+      var l, a, b, r;
+      em(0, function () { l = carroIV(c.L1, 1, -15); a = carroIV(c.A, 0, -25); b = carroIV(c.B, 2, -25);
+        move(l, -15, 58, 1400); move(a, -25, 22, 1600); move(b, -25, 30, 1700);
+        legenda("O pelotão de trás vem com tudo!", c.A.nome + " e " + c.B.nome + " na caça a " + c.L1.nome); });
+      em(3200, function () { r = objeto("iv-rampa", "", 1, 74); legenda(c.L1.nome + " pula a rampa e escapa!", "Manobra de quem confirma o agendamento");
+        move(l, 58, 84, 1600, 0, "linear");
+        anim(l.querySelector("svg"), [{ transform: "translateY(0) rotate(0)" }, { transform: "translateY(0) rotate(0)", offset: .35 },
+          { transform: "translateY(-95%) rotate(-180deg)", offset: .62 }, { transform: "translateY(0) rotate(-360deg)", offset: .9 }, { transform: "translateY(0) rotate(-360deg)" }], 1600);
+        move(a, 22, 58, 1600); move(b, 30, 64, 1600); depois(1500, function () { faiscas(l, 16); }); });
+      em(5600, function () { if (r) r.remove(); pancada(l, "+ ESTILO"); });
+      em(7600, function () { move(l, 84, 125, 1000, 0, "ease-in"); move(a, 58, 118, 1100, 100, "ease-in"); move(b, 64, 115, 1200, 150, "ease-in"); });
+      em(9300, function () { [l, a, b].forEach(function (x) { x.remove(); }); });
+    },
+    banana: function (em, c) {
+      var l, s, ban;
+      em(0, function () { l = carroIV(c.L1, 1, -15); s = carroIV(c.L2, 1, -40); move(l, -15, 62, 1400); move(s, -40, 26, 1600);
+        legenda(c.L1.nome + " na frente…", c.L2.nome + " encosta na traseira"); });
+      em(1900, function () { ban = objeto("iv-banana", SVG_BANANA, 1, 52); legenda("…e solta uma casca de banana!", "");
+        anim(ban, [{ transform: "translate(-50%,-50%) scale(0) rotate(-40deg)" }, { transform: "translate(-50%,-50%) scale(1) rotate(0)" }], 300);
+        deslizar(ban, 52, 34, 1300); move(s, 26, 36, 1300, 0, "linear"); });
+      em(3250, function () { gira(s, 2, 1100); faiscas(s, 12); pancada(s, "ESCORREGOU!");
+        legenda(c.L2.nome + " escorregou na casca!", "Paciente que falta é casca de banana na agenda"); deslizar(ban, 34, -10, 1500); move(s, 36, 20, 1100); });
+      em(5200, function () { if (ban) ban.remove(); legenda(c.L2.nome + " se recupera!", "Confirmar na véspera evita a casca");
+        fogo(s, true); move(s, 20, 48, 1300); });
+      em(6800, function () { fogo(s, false); });
+      em(7600, function () { move(l, 62, 125, 1000, 0, "ease-in"); move(s, 48, 118, 1200, 100, "ease-in"); });
+      em(9300, function () { l.remove(); s.remove(); });
+    },
+    cafe: function (em, c) {
+      var l, a, b, cf;
+      em(0, function () { l = carroIV(c.L1, 1, -15); a = carroIV(c.A, 0, -25); b = carroIV(c.B, 2, -25);
+        move(l, -15, 64, 1400); move(a, -25, 14, 1400); move(b, -25, 22, 1600); legenda("Caixa surpresa na pista!", c.A.nome + " vai pegar…"); });
+      em(1500, function () { cf = objeto("iv-cafe", SVG_CAFE, 0, 36);
+        anim(cf, [{ transform: "translate(-50%,-50%) scale(0) rotate(-30deg)" }, { transform: "translate(-50%,-50%) scale(1.15) rotate(8deg)" }, { transform: "translate(-50%,-50%) scale(1) rotate(0)" }], 600);
+        move(a, 14, 34, 1100, 300); });
+      em(2900, function () { if (cf) cf.remove(); fogo(a, true); faiscas(a, 10);
+        legenda(c.A.nome + " pega o turbo de café!", "Paciente que comparece confirma os pontos"); move(a, 34, 72, 1500, 0, "cubic-bezier(.5,0,.2,1)"); });
+      em(4800, function () { fogo(a, false); pancada(a, "ULTRAPASSOU!"); legenda(c.A.nome + " passa " + c.L1.nome + "!", "Por enquanto…"); move(l, 64, 60, 800); });
+      em(6200, function () { legenda(c.B.nome + " vem logo atrás", "Ninguém está fora da corrida"); move(b, 22, 50, 1300); });
+      em(7700, function () { move(a, 72, 125, 1000, 0, "ease-in"); move(l, 60, 120, 1100, 80, "ease-in"); move(b, 50, 115, 1200, 150, "ease-in"); });
+      em(9300, function () { [l, a, b].forEach(function (x) { x.remove(); }); });
+    },
+    pneu: function (em, c) {
+      var a, alvo, p;
+      em(0, function () { alvo = carroIV(c.L2, 1, -15); a = carroIV(c.A, 2, -30); move(alvo, -15, 60, 1400); move(a, -30, 22, 1500);
+        legenda(c.A.nome + " mira em " + c.L2.nome, "Lá vem o pneu teleguiado!"); });
+      em(1900, function () { p = objeto("iv-pneu", SVG_PNEU, 2, 28);
+        anim(p, [{ left: "28%", top: FAIXAS[2] + "%" }, { left: "45%", top: (FAIXAS[1] + 10) + "%", offset: .5 }, { left: "57%", top: FAIXAS[1] + "%" }], 1300, 0, "ease-in"); });
+      em(3200, function () { if (p) p.remove(); pancada(alvo, "PÁ!"); faiscas(alvo, 20);
+        anim(alvo.querySelector("svg"), [{ transform: "translateY(0) rotate(0)" }, { transform: "translateY(-60%) rotate(200deg)", offset: .45 }, { transform: "translateY(0) rotate(360deg)" }], 1000);
+        move(alvo, 60, 42, 1200); legenda("Acertou em cheio!", c.L2.nome + " roda na pista"); });
+      em(4600, function () { fogo(a, true); move(a, 22, 70, 1500, 0, "cubic-bezier(.5,0,.2,1)"); trocaFaixa(a, 2, 1, 900);
+        legenda(c.A.nome + " aproveita e passa!", "Cada agendamento conta"); });
+      em(6400, function () { fogo(a, false); legenda(c.L2.nome + " volta para a briga", "A corrida só acaba em " + dataBR(ESTADO.campanha.fim)); move(alvo, 42, 58, 1200); });
+      em(7800, function () { move(a, 70, 125, 1000, 0, "ease-in"); move(alvo, 58, 118, 1100, 100, "ease-in"); });
+      em(9300, function () { a.remove(); alvo.remove(); });
+    },
+    atalho: function (em, c) {
+      var l, b;
+      em(0, function () { l = carroIV(c.L1, 0, -15); b = carroIV(c.B, 2, -25); move(l, -15, 56, 1400); move(b, -25, 24, 1600);
+        legenda(c.B.nome + " conhece um atalho…", ""); });
+      em(2600, function () { legenda(c.B.nome + " corta pela recepção!", "Paciente no balcão também é agendamento");
+        anim(b, [{ opacity: 1, transform: "translate(-50%,-50%) scale(1)" }, { opacity: 0, transform: "translate(-50%,-80%) scale(.6)" }], 450);
+        depois(700, function () { b.style.left = "64%"; anim(b, [{ opacity: 0, transform: "translate(-50%,-80%) scale(.6)" }, { opacity: 1, transform: "translate(-50%,-50%) scale(1)" }], 450); faiscas(b, 12); pancada(b, "ATALHO!"); }); });
+      em(5200, function () { legenda(c.L1.nome + " não acredita!", "Lado a lado na reta"); move(l, 56, 66, 1200); });
+      em(7600, function () { move(l, 66, 125, 1000, 0, "ease-in"); move(b, 64, 120, 1100, 60, "ease-in"); });
+      em(9300, function () { l.remove(); b.remove(); });
+    },
+    raio: function (em, c) {
+      var a, l, s;
+      em(0, function () { a = carroIV(c.A, 0, -30); l = carroIV(c.L1, 1, -15); s = carroIV(c.L2, 2, -15);
+        move(a, -30, 20, 1400); move(l, -15, 62, 1400); move(s, -15, 52, 1500); legenda(c.A.nome + " abre a caixa…", "O que será?"); });
+      em(2000, function () { clarao();
+        [l, s].forEach(function (x) { var r = objeto("iv-raio", SVG_RAIO, x === l ? 1 : 2, parseFloat(x.style.left) || 60);
+          r.style.left = (x === l ? 62 : 52) + "%"; anim(r, [{ opacity: 0, transform: "translate(-50%,-130%) scale(1.4)" }, { opacity: 1, transform: "translate(-50%,-100%) scale(1)" }, { opacity: 0 }], 700); depois(800, function () { r.remove(); }); });
+        legenda("RAIO!", "Todo mundo encolhe, menos " + c.A.nome); });
+      em(2500, function () { escala(l, 1, .5, 400); escala(s, 1, .5, 400); move(l, 62, 46, 1800); move(s, 52, 38, 1800);
+        fogo(a, true); move(a, 20, 72, 1800, 200, "cubic-bezier(.5,0,.2,1)"); });
+      em(4800, function () { fogo(a, false); pancada(a, "NA FRENTE!"); legenda("Tamanho não é documento", "Quem tem pouco tempo também ganha corrida"); });
+      em(6200, function () { escala(l, .5, 1, 500); escala(s, .5, 1, 500); legenda("Efeito acabou!", c.L1.nome + " e " + c.L2.nome + " voltam com tudo"); move(l, 46, 64, 1200); move(s, 38, 56, 1300); });
+      em(7800, function () { move(a, 72, 125, 1000, 0, "ease-in"); move(l, 64, 120, 1100, 80, "ease-in"); move(s, 56, 116, 1200, 140, "ease-in"); });
+      em(9300, function () { [a, l, s].forEach(function (x) { x.remove(); }); });
+    },
+    ima: function (em, c) {
+      var l, b, im;
+      em(0, function () { l = carroIV(c.L1, 1, -15); b = carroIV(c.B, 1, -45); move(l, -15, 58, 1400); move(b, -45, 18, 1600);
+        legenda(c.B.nome + " pega o ímã!", "Vai grudar em " + c.L1.nome); });
+      em(1700, function () { im = el("div", "iv-ima", b); im.innerHTML = SVG_IMA;
+        anim(im, [{ transform: "translate(-50%,0) scale(0)" }, { transform: "translate(-50%,0) scale(1)" }], 300); move(b, 18, 44, 1800, 0, "ease-in");
+        legenda("Puxado pelo ímã…", c.B.nome + " cola na traseira"); });
+      em(3900, function () { if (im) im.remove(); fogo(b, true); trocaFaixa(b, 1, 0, 500); move(b, 44, 74, 1300, 200, "cubic-bezier(.5,0,.2,1)");
+        legenda("Estilingue!", c.B.nome + " sai do vácuo e ultrapassa"); });
+      em(5600, function () { fogo(b, false); pancada(b, "VÁCUO!"); });
+      em(6200, function () { fogo(l, true); move(l, 58, 72, 1000); legenda(c.L1.nome + " reage!", "Lado a lado até a bandeirada"); });
+      em(7400, function () { fogo(l, false); });
+      em(7800, function () { move(b, 74, 125, 1000, 0, "ease-in"); move(l, 72, 122, 1050, 40, "ease-in"); });
+      em(9300, function () { l.remove(); b.remove(); });
+    }
+  };
+  var VARIANTES = [
+    { nome: "Turbo e drift", cenas: ["turboDrift", "rampa"] },
+    { nome: "Casca de banana", cenas: ["banana", "cafe"] },
+    { nome: "Pneu teleguiado", cenas: ["pneu", "atalho"] },
+    { nome: "Raio", cenas: ["raio", "rampa"] },
+    { nome: "Vácuo e ímã", cenas: ["ima", "banana"] }
+  ];
+  var proximaManual = null;
+
+  function tocarIntervalo(qual) {
+    var der = ultimaDer || Calc.derivar(ESTADO), ps = der.pessoas;
+    if (ps.length < 4) return;
+    var hora = new Date().getHours();
+    var vi = typeof qual === "number" ? qual : (proximaManual != null ? proximaManual : hora % VARIANTES.length);
+    proximaManual = (vi + 1) % VARIANTES.length;
+    var v = VARIANTES[vi];
+    var fundo = ps.slice(Math.ceil(ps.length / 2)).filter(function (x) { return x.ptsPista > 0; });
+    if (fundo.length < 2) fundo = ps.slice(2);
+    var giro = hora + vi;
+    var cast = { L1: ps[0].p, L2: ps[1].p, A: fundo[giro % fundo.length].p, B: fundo[(giro + 1) % fundo.length].p };
+    abreTela();
+    if (REDUZ) { cenaFinal(der); depois(12000, fechaTela); return; }
+    legenda("Intervalo da corrida", v.nome);
+    luzes();
+    [3500, 13000].forEach(function (t0, k) {
+      CENAS[v.cenas[k]](function (ms, fn) { depois(t0 + ms, function () { if (tela) fn(); }); }, cast);
+    });
+    depois(22500, function () { cenaFinal(der); });
+    depois(30000, fechaTela);
+  }
+
+  function cenaFinal(der) {
+    if (!tela) return;
+    legenda("Cada paciente que comparece é combustível", "Faltam " + diasAte(ESTADO.campanha.fim) + " dias para a bandeirada");
+    var pod = el("div", "iv-podio", tela);
+    var ordem = [1, 0, 2];
+    ordem.forEach(function (k, j) {
+      var x = der.pessoas[k]; if (!x) return;
+      var c = el("div", "iv-degrau d" + (k + 1), pod);
+      c.innerHTML = avatar(x.p, "grande") + '<b></b><span></span><div class="iv-bloco">' + (k + 1) + 'º</div>';
+      c.querySelector("b").textContent = x.p.nome;
+      c.querySelector("span").textContent = num(x.ptsPista) + " pontos";
+      if (!REDUZ) anim(c, [{ transform: "translateY(60px)", opacity: 0 }, { transform: "none", opacity: 1 }], 600, 2200 + j * 350);
+    });
+    if (!REDUZ) depois(3600, confete);
+  }
+
+  /* um intervalo por hora, na virada da hora, no modo TV */
+  var ultimaHora = null;
+  setInterval(function () {
+    if (!TV || document.visibilityState !== "visible") return;
+    var d = new Date();
+    if (d.getMinutes() === 0 && ultimaHora !== d.getHours()) { ultimaHora = d.getHours(); tocarIntervalo(); }
+  }, 20000);
+
+  /* ================= gestão ================= */
+  var rascunho = null, previa = null, abaAtual = "placar", memSel = null, nomes = {};
+  var CAMPOS_REGRA = { prefixo: "Prefixo no Naja", horas: "Horas/semana", classe: "Classe", participante: "Participação" };
+
+  function abrirGestao() {
+    rascunho = JSON.parse(JSON.stringify(ESTADO));
+    previa = null;
+    var d = document.getElementById("gestao");
+    if (!d) { d = document.createElement("dialog"); d.id = "gestao"; d.className = "gestao"; document.body.appendChild(d); }
+    renderGestao();
+    try { d.showModal(); } catch (e) { d.setAttribute("open", ""); }
+  }
+  function fecharGestao() { previa = null; var d = document.getElementById("gestao"); if (d) { try { d.close(); } catch (e) { d.removeAttribute("open"); } } }
+
+  function renderGestao() {
+    var d = document.getElementById("gestao");
+    var abas = [["placar", "Atualizar placar"], ["pessoas", "Participantes"], ["memoria", "Memória de cálculo"], ["registro", "Registro"]];
+    var h = '<div class="g-topo"><h2>Gestão</h2><div class="abas" role="tablist">';
+    abas.forEach(function (a) { h += '<button class="aba" role="tab" type="button" data-aba="' + a[0] + '" aria-selected="' + (abaAtual === a[0]) + '">' + a[1] + '</button>'; });
+    h += '</div><button class="btn g-fechar" type="button" id="g-fechar">Fechar</button></div><div class="g-corpo">';
+    if (abaAtual === "placar") h += abaPlacar();
+    else if (abaAtual === "pessoas") h += abaPessoas();
+    else if (abaAtual === "memoria") h += abaMemoria();
+    else h += abaRegistro();
+    h += '</div>';
+    d.innerHTML = h;
+    d.querySelectorAll(".aba").forEach(function (b) { b.onclick = function () { abaAtual = b.dataset.aba; renderGestao(); }; });
+    document.getElementById("g-fechar").onclick = fecharGestao;
+    if (abaAtual === "placar") ligaPlacar();
+    if (abaAtual === "pessoas") ligaPessoas();
+    if (abaAtual === "memoria") ligaMemoria();
+    if (abaAtual === "registro") ligaRegistro();
+  }
+
+  /* problemas que impedem publicar o placar */
+  function bloqueios(pl) {
+    var b = [];
+    if (pl.corte > hojeKey()) b.push("A data da exportação não pode ser depois de hoje.");
+    if (pl.ultimoCadastro && pl.corte < pl.ultimoCadastro) b.push("O arquivo tem agendamentos criados em " + dataBRano(pl.ultimoCadastro) + ", depois da data de exportação informada. Corrija a data.");
+    return b;
+  }
+
+  function abaPlacar() {
+    var c = ESTADO.campanha, h = '';
+    if (cap.downloads) h += '<div class="aviso ok site-box"><b>Site da TV</b><span>Placar atual: dados até ' + (ESTADO.placar ? dataBRano(ESTADO.placar.corte) : '—') +
+      '. Depois de publicar um placar novo, baixe a página e suba no site. A TV recarrega sozinha em até 5 minutos.</span>' +
+      '<div class="rodape-g"><button class="btn forte" type="button" id="g-site">Baixar index.html do site</button><span class="vazio" id="g-site-status"></span></div></div>';
+    h += '<p>O arquivo é lido só neste navegador. O placar publicado guarda apenas contagens por pessoa, nenhum dado de paciente.</p>';
+    h += '<ol class="passos"><li>No Naja, exporte o relatório de agendamentos em Excel com <b>Data do agendamento de ' + dataBR(c.inicio) + '/2026 a ' + dataBR(c.fim) + '/2026</b>, todos os status.</li>' +
+      '<li>Escolha o arquivo abaixo e confirme a data em que exportou.</li><li>Baixe o relatório de exceções e guarde junto com o arquivo do Naja.</li><li>Clique em Publicar placar. A TV e todas as telas abertas atualizam sozinhas.</li></ol>';
+    h += '<div class="arquivo"><input type="file" id="g-arquivo" accept=".xlsx,.xls"><span id="g-status" class="vazio"></span></div>';
+    if (previa && previa.erro) h += '<div class="aviso erro">' + esc(previa.erro) + '</div>';
+    if (previa && previa.pl) {
+      var pl = previa.pl, atual = ESTADO.placar, bl = bloqueios(pl);
+      h += '<div class="corte-box"><label for="g-corte"><b>Data em que o relatório foi exportado do Naja</b></label>' +
+        '<input type="date" id="g-corte" value="' + pl.corte + '" max="' + hojeKey() + '">' +
+        '<span class="vazio">Exame anterior a esta data sem chegada registrada conta como falta. Exame desta data em diante fica como a confirmar. ' +
+        'Preenchida com o dia do último agendamento criado no arquivo (' + dataBRano(pl.ultimoCadastro) + '); se exportou em outro dia, corrija.</span></div>';
+      bl.forEach(function (t) { h += '<div class="aviso erro">' + esc(t) + '</div>'; });
+      if (atual && pl.corte < atual.corte) h += '<div class="aviso erro">Esta exportação é de ' + dataBRano(pl.corte) + ', anterior ao placar publicado (' + dataBRano(atual.corte) + '). Confira se é o arquivo certo.</div>';
+      if (pl.exameDe && pl.exameDe > c.inicio) h += '<div class="aviso">Os exames do arquivo começam em ' + dataBR(pl.exameDe) + '. Para o placar completo, exporte a partir de ' + dataBR(c.inicio) + '.</div>';
+      if (pl.remarcacoes.ambiguas) h += '<div class="aviso">' + pl.remarcacoes.ambiguas + ' remarcação(ões) com mais de um dono possível. Estão no relatório de exceções para revisão.</div>';
+      h += '<div class="resumo">' +
+        '<div><b>' + num(pl.linhasLidas) + '</b><span>linhas lidas</span></div>' +
+        '<div><b>' + num(pl.validos) + '</b><span>agendamentos válidos</span></div>' +
+        '<div><b>' + num(pl.excluidos.lead) + '</b><span>criados a menos de 60 min do exame</span></div>' +
+        '<div><b>' + num(pl.excluidos.erro + pl.excluidos.dup) + '</b><span>erro de marcação ou duplicidade</span></div>' +
+        '<div><b>' + num(pl.remarcacoes.transferidas) + '</b><span>remarcações creditadas a quem agendou primeiro</span></div>' +
+        '<div><b>' + num(pl.foraDosParticipantes) + '</b><span>feitos por quem não participa</span></div></div>';
+      h += '<div class="tabela-wrap"><table class="t"><thead><tr><th>Pessoa</th><th>Válidos</th><th>Compareceram</th><th>Faltas</th><th>Por vir</th><th>Desistências</th><th>Variação</th></tr></thead><tbody>';
+      ESTADO.participantes.forEach(function (p) {
+        var l = pl.linhas[p.id], a = (atual && atual.linhas[p.id]) || { ef: 0, pend: 0 };
+        var dv = (l.ef + l.pend) - (a.ef + a.pend);
+        h += '<tr><td>' + esc(p.nome) + '</td><td>' + l.validos + '</td><td>' + l.ef + '</td><td>' + l.fa + '</td><td>' + l.pend + '</td><td>' + l.canc + '</td><td>' + (dv > 0 ? "+" : "") + dv + '</td></tr>';
+      });
+      h += '</tbody></table></div>';
+      h += '<p class="vazio">Arquivo: ' + esc(previa.arquivo.nome) + ' · impressão digital ' + esc(previa.arquivo.hash) + '. Ela fica registrada no placar: se alguém contestar, dá para provar qual arquivo gerou o resultado.</p>';
+      h += '<div class="rodape-g">' +
+        (cap.downloads ? '<button class="btn" type="button" id="g-excecoes">Baixar relatório de exceções (' + num(pl.excecoes.length) + ')</button>' : '') +
+        '<button class="btn forte" type="button" id="g-publicar"' + (cap.artifact && !bl.length ? '' : ' disabled') + '>Publicar placar</button>' +
+        '<span class="vazio" id="g-pub-status">' + (cap.artifact ? '' : 'Esta tela não pode publicar: abra o painel com uma conta de editor.') + '</span></div>';
+    }
+    return h;
+  }
+
+  var xlsxCarregando = null;
+  function carregaXLSX() {
+    if (window.XLSX) return Promise.resolve();
+    if (xlsxCarregando) return xlsxCarregando;
+    xlsxCarregando = new Promise(function (ok, falha) {
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+      s.charset = "utf-8"; /* a biblioteca tem caracteres fora do ASCII; sem isso, espaços especiais viram lixo e a deduplicação erra */
+      s.onload = ok; s.onerror = function () { xlsxCarregando = null; falha(new Error("Não consegui carregar o leitor de planilhas. Verifique a internet e tente de novo.")); };
+      document.head.appendChild(s);
+    });
+    return xlsxCarregando;
+  }
+  function impressao(buf) {
+    try {
+      if (!(window.crypto && crypto.subtle)) return Promise.resolve("indisponível");
+      return crypto.subtle.digest("SHA-256", buf).then(function (d) {
+        return Array.prototype.map.call(new Uint8Array(d), function (b) { return (b < 16 ? "0" : "") + b.toString(16); }).join("").slice(0, 16);
+      }).catch(function () { return "indisponível"; });
+    } catch (e) { return Promise.resolve("indisponível"); }
+  }
+  function reapurar(corte) {
+    var cfg = Object.assign({}, ESTADO, { corte: corte || null });
+    previa.pl = Calc.apurar(previa.rows, cfg);
+  }
+
+  function csvExcecoes() {
+    var pl = previa.pl, q = function (v) { v = String(v == null ? "" : v); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var L = [];
+    L.push(["Relatório de exceções · Campeão de Agendamentos"].join(";"));
+    L.push(["Arquivo", previa.arquivo.nome].map(q).join(";"));
+    L.push(["Impressão digital (SHA-256, 16 primeiros)", previa.arquivo.hash].map(q).join(";"));
+    L.push(["Exportação do Naja em", dataBRano(pl.corte)].map(q).join(";"));
+    L.push(["Gerado em", quando(new Date().toISOString())].map(q).join(";"));
+    L.push("");
+    L.push(["Tipo", "Isn agenda", "Modalidade", "Exame", "Cadastro", "Usuário que cadastrou", "Crédito para", "Observação"].join(";"));
+    pl.excecoes.slice().sort(function (a, b) { return a.tipo < b.tipo ? -1 : a.tipo > b.tipo ? 1 : (a.cadastro < b.cadastro ? -1 : 1); }).forEach(function (e) {
+      L.push([e.tipo, e.isn, e.mod, e.exame, e.cadastro, e.usuario, e.credito, e.obs].map(q).join(";"));
+    });
+    return "﻿" + L.join("\r\n");
+  }
+
+  function ligaPlacar() {
+    var bs = document.getElementById("g-site");
+    if (bs) bs.onclick = function () { baixarSite(document.getElementById("g-site-status")); };
+    var inp = document.getElementById("g-arquivo"), st = document.getElementById("g-status");
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0]; if (!f) return;
+      st.textContent = "Lendo " + f.name + "…";
+      var buf;
+      carregaXLSX().then(function () { return f.arrayBuffer(); }).then(function (b) {
+        buf = b; return impressao(b.slice(0));
+      }).then(function (hash) {
+        var wb = XLSX.read(buf, { cellDates: true });
+        var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: null, raw: true });
+        previa = { rows: rows, arquivo: { nome: f.name, hash: hash } };
+        reapurar(null);
+      }).catch(function (e) { previa = { erro: e.message || String(e) }; }).then(renderGestao);
+    };
+    var dc = document.getElementById("g-corte");
+    if (dc) dc.onchange = function () { if (/^\d{4}-\d{2}-\d{2}$/.test(dc.value)) { reapurar(dc.value); renderGestao(); } };
+    var bx = document.getElementById("g-excecoes");
+    if (bx) bx.onclick = function () {
+      var stp = document.getElementById("g-pub-status");
+      cap.downloads.save({ filename: "excecoes_campeao_" + previa.pl.corte + ".csv", data: csvExcecoes() })
+        .then(function () { stp.textContent = "Relatório baixado."; })
+        .catch(function (e) { var c = e && e.code; stp.textContent = c === "declined" ? "Download cancelado." : c === "rate_limited" ? "Já há um download aberto. Tente de novo em instantes." : "Não foi possível baixar aqui."; });
+    };
+    var pub = document.getElementById("g-publicar");
+    if (pub) pub.onclick = function () {
+      var novo = JSON.parse(JSON.stringify(ESTADO)), pl = JSON.parse(JSON.stringify(previa.pl));
+      delete pl.excecoes;
+      pl.arquivo = { nome: previa.arquivo.nome, hash: previa.arquivo.hash };
+      pl.importadoPor = cap.eu || null;
+      novo.placar = pl;
+      var u = {}; Object.keys(pl.linhas).forEach(function (k) { u[k] = pl.linhas[k].ef + pl.linhas[k].pend; });
+      novo.historico = (novo.historico || []).filter(function (e) { return e.data !== pl.corte; });
+      novo.historico.push({ data: pl.corte, u: u });
+      novo.historico.sort(function (a, b) { return a.data < b.data ? -1 : 1; });
+      if (novo.historico.length > 90) novo.historico = novo.historico.slice(-90);
+      novo.importacoes = (novo.importacoes || []).concat([{ em: pl.geradoEm, por: cap.eu || null, corte: pl.corte, arquivo: pl.arquivo.nome, hash: pl.arquivo.hash, linhas: pl.linhasLidas, validos: pl.validos }]).slice(-150);
+      publicar(novo, pub, document.getElementById("g-pub-status"));
+    };
+  }
+
+  function abaPessoas() {
+    var r = rascunho, c = ESTADO.campanha, h = '';
+    h += congelado()
+      ? '<div class="aviso">Regras congeladas desde ' + dataBRano(c.congelaEm) + '. Mudar prefixo, horas ou classe exige motivo e fica no Registro. Valem para a campanha inteira, inclusive para trás.</div>'
+      : '<div class="aviso">Prefixo, horas e classe congelam em ' + dataBRano(c.congelaEm) + '. Até lá, mudanças ficam no Registro sem exigir motivo.</div>';
+    h += '<p>Classe define quantos pontos vale cada agendamento. Horas por semana servem de referência para escolher a classe. Se mudar o prefixo, suba uma nova exportação para recontar. Foto e cor podem mudar a qualquer momento.</p>';
+    h += '<div class="tabela-wrap"><table class="t"><thead><tr><th>Foto</th><th>Nome</th><th>Prefixo no Naja</th><th>Horas/sem</th><th>Classe</th><th>Cor</th></tr></thead><tbody>';
+    r.participantes.forEach(function (p, i) {
+      h += '<tr><td class="esq"><div class="foto-cel">' + avatar(p) +
+        '<label for="f-' + i + '">' + (p.foto ? 'Trocar' : 'Subir foto') + '</label><input id="f-' + i + '" type="file" accept="image/*" hidden data-i="' + i + '" class="in-foto">' +
+        (p.foto ? '<button type="button" class="rm-foto" data-i="' + i + '">Remover</button>' : '<span class="vazio">ilustrativa</span>') + '</div></td>' +
+        '<td class="esq"><input class="medio" id="n-' + i + '" data-i="' + i + '" data-k="nome" value="' + esc(p.nome) + '"></td>' +
+        '<td class="esq"><input class="largo" id="pf-' + i + '" data-i="' + i + '" data-k="prefixo" value="' + esc(p.prefixo) + '"></td>' +
+        '<td><input type="number" step="0.5" min="0.5" id="h-' + i + '" data-i="' + i + '" data-k="horas" value="' + p.horas + '"></td>' +
+        '<td><select id="c-' + i + '" data-i="' + i + '" data-k="classe">' + Object.keys(r.classes).map(function (k) {
+          return '<option value="' + k + '"' + (k === p.classe ? ' selected' : '') + '>' + k + ' · ' + r.classes[k] + ' pts</option>'; }).join("") + '</select></td>' +
+        '<td><input type="color" id="cor-' + i + '" data-i="' + i + '" data-k="cor" value="' + esc(p.cor) + '"></td></tr>';
+    });
+    h += '</tbody></table></div>';
+    h += '<p class="vazio">Classes por horas disponíveis para agendar: A ≥35h · B 24–34h · C 15–23h · D 11–14h · E 6–10h · F menos de 6h. Use fotos só de quem autorizou.</p>';
+    h += '<div class="motivo"><label for="g-motivo"><b>Motivo da alteração</b>' + (congelado() ? ' (obrigatório para prefixo, horas ou classe)' : ' (opcional até o congelamento)') + '</label>' +
+      '<textarea id="g-motivo" rows="2" maxlength="300" placeholder="Ex.: Victoria passou a fazer 10h no agendamento a partir de 20/10"></textarea></div>';
+    h += '<div class="rodape-g"><button class="btn forte" type="button" id="g-salvar"' + (cap.artifact ? '' : ' disabled') + '>Salvar e publicar</button><span class="vazio" id="g-sal-status"></span></div>';
+    return h;
+  }
+
+  function reduzFoto(file) {
+    return new Promise(function (ok, falha) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var t = 160, cv = document.createElement("canvas"); cv.width = t; cv.height = t;
+        var s = Math.min(img.width, img.height), cx = cv.getContext("2d");
+        cx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, t, t);
+        URL.revokeObjectURL(url); ok(cv.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); falha(new Error("Não consegui abrir essa imagem.")); };
+      img.src = url;
+    });
+  }
+
+  function mudancasDeRegra() {
+    var antes = {}; ESTADO.participantes.forEach(function (p) { antes[p.id] = p; });
+    var out = [];
+    rascunho.participantes.forEach(function (p) {
+      var a = antes[p.id]; if (!a) return;
+      Object.keys(CAMPOS_REGRA).forEach(function (k) {
+        if (String(a[k]) !== String(p[k])) out.push({ id: p.id, nome: p.nome, campo: k, de: a[k], para: p[k] });
+      });
+    });
+    return out;
+  }
+
+  function ligaPessoas() {
+    var d = document.getElementById("gestao");
+    d.querySelectorAll("input[data-k], select[data-k]").forEach(function (e) {
+      e.onchange = function () {
+        var p = rascunho.participantes[+e.dataset.i], k = e.dataset.k;
+        if (k === "horas") p.horas = Math.max(0.5, parseFloat(String(e.value).replace(",", ".")) || p.horas);
+        else p[k] = e.value;
+      };
+    });
+    d.querySelectorAll(".in-foto").forEach(function (e) {
+      e.onchange = function () {
+        var f = e.files && e.files[0]; if (!f) return;
+        var mot = document.getElementById("g-motivo").value;
+        reduzFoto(f).then(function (u) { rascunho.participantes[+e.dataset.i].foto = u; renderGestao(); document.getElementById("g-motivo").value = mot; })
+          .catch(function (err) { document.getElementById("g-sal-status").textContent = err.message; });
+      };
+    });
+    d.querySelectorAll(".rm-foto").forEach(function (e) {
+      e.onclick = function () { var mot = document.getElementById("g-motivo").value; rascunho.participantes[+e.dataset.i].foto = null; renderGestao(); document.getElementById("g-motivo").value = mot; };
+    });
+    var b = document.getElementById("g-salvar");
+    b.onclick = function () {
+      var st = document.getElementById("g-sal-status"), motivo = document.getElementById("g-motivo").value.trim();
+      var mud = mudancasDeRegra();
+      if (mud.length && congelado() && motivo.length < 5) { st.textContent = "Escreva o motivo: prefixo, horas e classe estão congelados."; document.getElementById("g-motivo").focus(); return; }
+      var novo = JSON.parse(JSON.stringify(rascunho)), em = new Date().toISOString();
+      novo.alteracoes = (novo.alteracoes || []).concat(mud.map(function (m) {
+        return { em: em, por: cap.eu || null, id: m.id, nome: m.nome, campo: m.campo, de: m.de, para: m.para, motivo: motivo, aposCongelar: congelado() };
+      }));
+      publicar(novo, b, st);
+    };
+  }
+
+  function abaMemoria() {
+    var der = Calc.derivar(ESTADO), c = ESTADO.campanha, h = '';
+    if (!memSel) memSel = der.pessoas[0] && der.pessoas[0].p.id;
+    h += '<div class="tabela-wrap"><table class="t"><thead><tr><th>Pessoa</th><th>Classe</th><th>Compareceram</th><th>Por vir</th><th>Faltas</th><th>Comparec. ajust.</th><th>Multiplicador</th><th>Pts confirmados</th><th>Pts a confirmar</th><th>Pontos na pista</th><th>Prêmio</th></tr></thead><tbody>';
+    der.pessoas.forEach(function (x) {
+      h += '<tr class="clicavel" data-id="' + esc(x.p.id) + '"><td>' + x.pos + 'º ' + esc(x.p.nome) + '</td><td>' + x.p.classe + ' · ' + x.pts + '</td><td>' + x.l.ef + '</td><td>' + x.l.pend + '</td><td>' + x.l.fa +
+        '</td><td>' + num(x.taxaAj * 100, 1) + '%</td><td>' + (x.emCalibracao ? 'em calibração' : '×' + num(x.mult, 2)) +
+        '</td><td>' + num(x.ptsReal) + '</td><td>' + num(x.ptsPend) + '</td><td>' + num(x.ptsPista) + '</td><td>' + (x.elegivel ? 'elegível' : 'fora (comparecimento)') + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+    var x = der.pessoas.filter(function (y) { return y.p.id === memSel; })[0];
+    if (x) {
+      var l = x.l;
+      function lin(a, b, tot) { return '<div class="linha' + (tot ? ' total' : '') + '"><span>' + a + '</span><b>' + b + '</b></div>'; }
+      h += '<div class="memoria"><h3>Memória de cálculo · ' + esc(x.p.nome) + '</h3>';
+      h += lin('Agendamentos válidos: ' + l.ef + ' compareceram + ' + l.pend + ' por vir + ' + l.fa + ' faltas + ' + l.canc + ' desistências', l.validos);
+      h += lin('Valor de cada agendamento: classe ' + x.p.classe + ' (' + num(x.p.horas, 1) + ' h/semana para agendar)', x.pts + ' pts');
+      h += lin('Comparecimento ajustado: (' + l.ef + ' + ' + num(c.taxaCasa * c.priorN, 2) + ') ÷ (' + (l.ef + l.fa) + ' + ' + c.priorN + ')' +
+        (x.emCalibracao ? ' · o multiplicador só vale a partir de ' + c.minResolv + ' agendamentos resolvidos' : ''), num(x.taxaAj * 100, 1) + '% → ×' + num(x.mult, 2));
+      h += lin('Pontos confirmados: ' + l.ef + ' × ' + x.pts + ' × ' + num(x.mult, 2), num(x.ptsReal));
+      h += lin('Pontos a confirmar: ' + l.pend + ' × ' + x.pts + ' (sem multiplicador até o paciente vir)', num(x.ptsPend));
+      h += lin('Pontos na pista: ' + num(x.ptsReal) + ' + ' + num(x.ptsPend), num(x.ptsPista), true);
+      h += '<p class="vazio">Campeão: mais pontos confirmados em ' + dataBR(c.fim) + ', com comparecimento ajustado de pelo menos ' + num(c.corteElegivel * 100) + '%. Na apuração final não sobra agendamento por vir.</p></div>';
+    }
+    return h;
+  }
+  function ligaMemoria() {
+    document.querySelectorAll("#gestao tr.clicavel").forEach(function (tr) { tr.onclick = function () { memSel = tr.dataset.id; renderGestao(); }; });
+  }
+
+  function quem(id) { return id ? (nomes[id] || "editor") : "—"; }
+  function abaRegistro() {
+    var h = '', alt = (ESTADO.alteracoes || []).slice().reverse(), imp = (ESTADO.importacoes || []).slice().reverse();
+    h += '<p>Tudo o que muda o resultado fica aqui: cada placar publicado (com a impressão digital do arquivo do Naja) e cada mudança de prefixo, horas ou classe.</p>';
+    h += '<h3 class="g-sub">Alterações de regra</h3>';
+    if (!alt.length) h += '<p class="vazio">Nenhuma alteração registrada.</p>';
+    else {
+      h += '<div class="tabela-wrap"><table class="t"><thead><tr><th>Quando</th><th>Quem</th><th>Pessoa</th><th>Campo</th><th>De</th><th>Para</th><th>Motivo</th></tr></thead><tbody>';
+      alt.forEach(function (a) {
+        h += '<tr><td>' + quando(a.em) + (a.aposCongelar ? ' <span class="selo">após congelar</span>' : '') + '</td><td class="esq" data-uid="' + esc(a.por || "") + '">' + esc(quem(a.por)) + '</td><td class="esq">' + esc(a.nome) + '</td><td class="esq">' + esc(CAMPOS_REGRA[a.campo] || a.campo) +
+          '</td><td class="esq">' + esc(a.de) + '</td><td class="esq">' + esc(a.para) + '</td><td class="esq quebra">' + esc(a.motivo || "—") + '</td></tr>';
+      });
+      h += '</tbody></table></div>';
+    }
+    h += '<h3 class="g-sub">Placares publicados</h3>';
+    if (!imp.length) h += '<p class="vazio">Os próximos placares publicados aparecem aqui. Placar atual: exportação de ' + (ESTADO.placar ? dataBRano(ESTADO.placar.corte) : '—') + ', publicado antes do registro existir.</p>';
+    else {
+      h += '<div class="tabela-wrap"><table class="t"><thead><tr><th>Publicado em</th><th>Quem</th><th>Exportação de</th><th>Arquivo</th><th>Impressão digital</th><th>Linhas</th><th>Válidos</th></tr></thead><tbody>';
+      imp.forEach(function (a) {
+        h += '<tr><td>' + quando(a.em) + '</td><td class="esq" data-uid="' + esc(a.por || "") + '">' + esc(quem(a.por)) + '</td><td>' + dataBRano(a.corte) + '</td><td class="esq">' + esc(a.arquivo) + '</td><td class="esq mono">' + esc(a.hash) + '</td><td>' + num(a.linhas) + '</td><td>' + num(a.validos) + '</td></tr>';
+      });
+      h += '</tbody></table></div>';
+    }
+    return h;
+  }
+  function ligaRegistro() {
+    if (!cap.user) return;
+    var ids = {};
+    (ESTADO.alteracoes || []).concat(ESTADO.importacoes || []).forEach(function (a) { if (a.por) ids[a.por] = 1; });
+    var lista = Object.keys(ids); if (!lista.length) return;
+    cap.user.profiles(lista).then(function (ps) {
+      lista.forEach(function (id) { if (ps[id] && ps[id].name) nomes[id] = ps[id].name; });
+      document.querySelectorAll("#gestao [data-uid]").forEach(function (td) { if (td.dataset.uid) td.textContent = quem(td.dataset.uid); });
+    }).catch(function () {});
+  }
+
+  /* ---------- publicar: a página é o registro ---------- */
+  var RESET = ":root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}img{max-width:100%}[hidden]{display:none!important}";
+  function montar(estado) {
+    var fim = "</" + "script>";
+    var json = JSON.stringify(estado).replace(/</g, "\\u003c");
+    return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>' + RESET + '</style></head><body>' +
+      '<title>Campeão de Agendamentos</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n' +
+      '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700;800&display=swap">\n' +
+      '<style id="css">' + document.getElementById("css").textContent + '</style>\n' +
+      '<script type="application/json" id="estado">' + json + fim + '\n' +
+      '<div id="app"></div>\n' +
+      '<script id="calc-src">' + document.getElementById("calc-src").textContent + fim + '\n' +
+      '<script id="app-src">' + document.getElementById("app-src").textContent + fim + '\n' +
+      '</body></html>';
+  }
+  /* ---------- página do site (fora do Claude): só visualização, estado embutido ---------- */
+  function hashTxt(t) { var h = 5381; for (var i = 0; i < t.length; i++) h = ((h * 33) ^ t.charCodeAt(i)) >>> 0; return h.toString(36); }
+  function montarSite(estado) {
+    var fim = "</" + "script>";
+    var e = JSON.parse(JSON.stringify(estado));
+    delete e.alteracoes; delete e.importacoes; delete e.base;   /* registro interno não vai para o site público */
+    if (e.placar) delete e.placar.base;
+    var json = JSON.stringify(e).replace(/</g, "\\u003c");
+    var versao = hashTxt(json);
+    return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' +
+      '<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">' +
+      '<meta name="campeao-versao" content="' + versao + '"><title>Campeão de Agendamentos</title>' +
+      '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700;800&display=swap">' +
+      '<style>' + RESET.replace("color-scheme:light;", "") + '</style>\n' +
+      '<style id="css">' + document.getElementById("css").textContent + '</style></head><body>\n' +
+      '<script type="application/json" id="estado">' + json + fim + '\n' +
+      '<div id="app"></div>\n' +
+      '<script id="calc-src">' + document.getElementById("calc-src").textContent + fim + '\n' +
+      '<script id="app-src">' + document.getElementById("app-src").textContent + fim + '\n' +
+      '</body></html>';
+  }
+  function baixarSite(status) {
+    if (!cap.downloads) return;
+    cap.downloads.save({ filename: "index.html", data: montarSite(ESTADO) })
+      .then(function () { status.textContent = "Baixado. Arraste o index.html para o site (veja o passo a passo)."; })
+      .catch(function (e) { var c = e && e.code; status.textContent = c === "declined" ? "Download cancelado." : "Não foi possível baixar aqui."; });
+  }
+
+  function publicar(estado, botao, status) {
+    if (!cap.artifact) return;
+    botao.disabled = true; status.textContent = "Publicando…";
+    cap.artifact.publish(montar(estado)).then(function () {
+      status.textContent = "Publicado. A página vai recarregar.";
+    }).catch(function (e) {
+      var code = e && e.code;
+      if (code === "conflict") status.textContent = "Alguém publicou antes. A página vai recarregar com a versão mais nova; refaça a alteração.";
+      else if (code === "not_writer" || code === "not_granted" || code === "consent_required" || code === "capability_disabled") { status.textContent = "Esta conta só pode ver o painel, não publicar."; cap.podeEditar = false; }
+      else if (code === "rate_limited") { status.textContent = "Muitas publicações seguidas. Espere um minuto e tente de novo."; botao.disabled = false; }
+      else if (code === "too_large") { status.textContent = "O painel ficou grande demais. Remova algumas fotos e tente de novo."; botao.disabled = false; }
+      else { status.textContent = "Não foi possível publicar (" + (e && e.message || code || "erro") + "). Tente de novo."; botao.disabled = false; }
+    });
+  }
+
+  render();
+  if (TV) ligarTela();
+  abertura();
+  setInterval(function () { if (!tela) render(); }, 60 * 60 * 1000 + 90000);
+
+  /* fora do Claude (site da TV): confere a cada 5 min se subiu versão nova e recarrega */
+  var minhaVersao = (document.querySelector('meta[name="campeao-versao"]') || {}).content;
+  if (minhaVersao && !(window.claude && window.claude.use)) {
+    setInterval(function () {
+      if (tela || !window.fetch) return;
+      fetch(location.href.split("#")[0].split("?")[0] + "?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (t) {
+        var m = t.match(/<meta name="campeao-versao" content="([^"]+)"/);
+        if (m && m[1] !== minhaVersao && !tela) location.reload();
+      }).catch(function () {});
+    }, 5 * 60 * 1000);
+  }
+
+  if (window.claude && window.claude.use) {
+    Promise.all([window.claude.use("user"), window.claude.use("artifact"), window.claude.use("downloads")]).then(function (r) {
+      var user = r[0]; cap.artifact = r[1]; cap.user = user; cap.downloads = r[2];
+      if (!user) return false;
+      return Promise.all([user.canEdit(), user.id().catch(function () { return null; })]).then(function (x) { cap.eu = x[1] || null; return x[0]; });
+    }).then(function (pode) {
+      cap.podeEditar = !!pode && !!cap.artifact;
+      if (cap.podeEditar && !TV && !tela) render();
+      else if (cap.podeEditar && !TV) setTimeout(function () { if (!tela) render(); }, 4000);
+    }).catch(function () {});
+  }
+})();
+</script>
+</body></html>
