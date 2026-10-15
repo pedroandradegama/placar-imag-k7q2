@@ -1,0 +1,1 @@
+# placar-imag-k7q2
