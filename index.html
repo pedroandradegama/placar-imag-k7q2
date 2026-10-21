@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="campeao-versao" content="f6ec95d6e9"><title>Campeão de Agendamentos</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700;800&display=swap"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="campeao-versao" content="c493db310f"><title>Campeão de Agendamentos</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;600;700;800&display=swap"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <style id="css">/* Painel de TV: pista de corrida em asfalto, uma só aparência (escura) para leitura à distância.
    Layout: cabeçalho fino · pista (raias por pessoa, linha de chegada = meta individual) · coluna do pódio */
 :root {
@@ -266,8 +266,101 @@ table.t td.quebra { white-space: normal; min-width: 14rem; }
 .sair-tv { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: none; }
 body.tv .sair-tv.ve { display: block; }
 .site-box { display: flex; flex-direction: column; gap: 0.45rem; }
+
+/* ---------- força-tarefa Lab ---------- */
+.lab-icone { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 6px; background: var(--asfalto-2); border: 1px solid var(--borda); display: grid; place-items: center; }
+.lab-icone svg { width: 1.9rem; height: 1.9rem; }
+.lab-principal { gap: .9rem; padding: 1.1rem 1.4rem 1rem; }
+.lab-placar { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 22rem); align-items: center; gap: 1.4rem; }
+@media (max-width: 760px) { .lab-placar { grid-template-columns: auto minmax(0, 1fr); } .lab-hero { grid-column: 1 / -1; } }
+.lab-grande b { font-family: var(--f-display); font-weight: 800; font-size: clamp(3.5rem, 6.5vw, 6.2rem); line-height: .9; font-variant-numeric: tabular-nums; }
+.lab-grande span { display: block; font-size: 1.15rem; color: var(--suave); margin-top: .3rem; text-transform: uppercase; letter-spacing: .08em; }
+.lab-status { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: .04em; padding: .35rem .9rem; border-radius: 6px; }
+.lab-status.ok { background: rgba(87, 196, 138, .16); color: var(--ok); border: 1px solid rgba(87, 196, 138, .5); }
+.lab-status.alerta { background: rgba(242, 195, 53, .12); color: var(--amarelo); border: 1px solid rgba(242, 195, 53, .5); }
+.lab-barra { position: relative; height: 3.2rem; border-radius: 8px; background: var(--asfalto-2); border: 1px solid var(--borda); margin-top: 1.8rem; }
+.lab-proj { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 8px; background: repeating-linear-gradient(135deg, rgba(236,230,216,.14) 0 8px, transparent 8px 16px); }
+.lab-feito { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 8px; background: linear-gradient(90deg, #3fae74, var(--ok)); display: flex; align-items: center; justify-content: flex-end; min-width: 3.5rem; }
+.lab-feito span { font-family: var(--f-display); font-weight: 800; font-size: 1.6rem; color: #0d1a12; padding-right: .6rem; }
+.lab-marca { position: absolute; top: -1.6rem; bottom: -.4rem; width: 0; }
+.lab-marca i { position: absolute; top: 1.4rem; bottom: 0; left: -1px; border-left: 3px solid var(--tinta); }
+.lab-marca.hoje i { border-left: 2px dashed var(--amarelo); }
+.lab-marca em { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; font-style: normal; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.lab-marca.meta em { transform: translateX(-100%); }
+.lab-marca.hoje em { color: var(--amarelo); }
+.lab-legenda { display: flex; gap: 1.2rem; flex-wrap: wrap; font-size: .8rem; color: var(--suave); }
+.lab-legenda i { display: inline-block; width: 1.3rem; height: .5rem; border-radius: 2px; vertical-align: middle; margin-right: .35rem; }
+.lab-legenda .lf { background: var(--ok); }
+.lab-legenda .lp { background: repeating-linear-gradient(135deg, rgba(236,230,216,.4) 0 4px, transparent 4px 8px); }
+.lab-numeros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.lab-numeros div { background: var(--asfalto-2); border: 1px solid var(--borda); border-radius: 8px; padding: .6rem .8rem; }
+.lab-numeros div.destaque { border-color: var(--amarelo); }
+.lab-numeros b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 2.3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.lab-numeros span { font-size: .78rem; color: var(--suave); text-transform: uppercase; letter-spacing: .06em; }
+@media (max-width: 560px) { .lab-numeros { grid-template-columns: 1fr; } }
+.lab-dias-tit { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .85rem; }
+.lab-dias-tit small { font-weight: 400; color: var(--suave); text-transform: none; letter-spacing: 0; margin-left: .4rem; }
+.lab-dias { --rot: 1.3rem; position: relative; display: flex; gap: 3px; height: clamp(7rem, 21vh, 14rem); margin-top: 1rem; }
+.lab-dia { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.lab-col { flex: 1; position: relative; }
+.lab-v { position: absolute; left: 0; right: 0; bottom: 0; background: var(--ok); border-radius: 3px 3px 0 0; min-height: 2px; }
+.lab-v span { position: absolute; top: -1.15rem; left: 0; right: 0; text-align: center; font-size: .72rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lab-dia.futuro .lab-col { background: repeating-linear-gradient(180deg, transparent 0 6px, rgba(236,230,216,.04) 6px 12px); }
+.lab-dia small { height: var(--rot); line-height: var(--rot); text-align: center; font-size: .68rem; color: var(--suave); font-variant-numeric: tabular-nums; }
+.lab-linha { position: absolute; left: 0; right: 0; bottom: calc(var(--rot) + (100% - var(--rot)) * var(--f)); border-top: 2px dashed var(--amarelo); pointer-events: none; }
+.lab-un { margin-bottom: .8rem; }
+.lab-un-top { display: flex; justify-content: space-between; gap: .5rem; margin-bottom: .3rem; }
+.lab-un-top b { font-size: 1.1rem; }
+.lab-un-top span { color: var(--suave); font-variant-numeric: tabular-nums; }
+.lab-un-barra { height: .7rem; border-radius: 4px; background: var(--asfalto-2); overflow: hidden; }
+.lab-un-barra i { display: block; height: 100%; border-radius: 4px; }
+.escada { display: flex; flex-direction: column; gap: .45rem; }
+.degrau { display: grid; grid-template-columns: 6.5rem auto minmax(0, 1fr); gap: .6rem; align-items: baseline; padding: .4rem .6rem; border-radius: 6px; background: var(--asfalto-2); }
+.degrau span { text-transform: capitalize; font-weight: 700; }
+.degrau b { font-family: var(--f-display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.degrau em { font-style: normal; color: var(--suave); text-align: right; font-size: .85rem; }
+.degrau.atual { border: 1px solid var(--amarelo); }
+.lab-metas { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.lab-metas label { display: flex; gap: .4rem; align-items: center; text-transform: capitalize; }
+.lab-metas input { width: 5.5rem; background: #0f1317; border: 1px solid var(--borda); border-radius: 5px; padding: .3rem .45rem; text-align: right; }
+
+/* Lab em movimento */
+.lab-centro { display: flex; flex-direction: column; gap: .8rem; align-items: flex-start; min-width: 0; }
+.lab-tubo { width: clamp(4.5rem, 6vw, 7rem); }
+.lab-tubo svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lab-tubo .liquido { transform: translateY(var(--nivel)); animation: lab-encher 2.2s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes lab-encher { from { transform: translateY(224px); } }
+.lab-tubo .onda { animation: lab-onda 2.6s linear infinite; }
+.lab-tubo .onda.o2 { animation-duration: 3.8s; animation-direction: reverse; opacity: .9; }
+@keyframes lab-onda { to { transform: translateX(80px); } }
+.lab-tubo .bolha { fill: rgba(255,255,255,.55); animation: lab-bolha var(--s) ease-in var(--d) infinite; opacity: 0; }
+@keyframes lab-bolha { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateY(calc(-1 * var(--h))); opacity: 0; } }
+.lab-hero { background: linear-gradient(160deg, rgba(242,195,53,.18), rgba(242,195,53,.04)); border: 2px solid var(--amarelo); border-radius: 12px; padding: .9rem 1.1rem; display: flex; flex-direction: column; gap: .15rem; animation: lab-brilho 3s ease-in-out infinite; }
+.lab-hero .rot { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--amarelo); }
+.lab-hero b { font-family: var(--f-display); font-weight: 800; font-size: clamp(3.4rem, 6vw, 5.8rem); line-height: .95; color: var(--texto); font-variant-numeric: tabular-nums; }
+.lab-hero .un { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; text-transform: uppercase; letter-spacing: .03em; }
+.lab-hero .det { font-size: .82rem; color: var(--suave); margin-top: .2rem; }
+@keyframes lab-brilho { 0%, 100% { box-shadow: 0 0 0 0 rgba(242,195,53,0); } 50% { box-shadow: 0 0 28px 2px rgba(242,195,53,.28); } }
+.lab-feito { animation: lab-cresce 1.8s cubic-bezier(.2,.7,.2,1) both; overflow: hidden; }
+@keyframes lab-cresce { from { width: 0; } }
+.lab-feito::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(115deg, rgba(255,255,255,.18) 0 14px, transparent 14px 28px); background-size: 60px 100%; animation: lab-listra 1.2s linear infinite; pointer-events: none; }
+@keyframes lab-listra { to { background-position: 60px 0; } }
+.lab-feito span { position: relative; z-index: 1; }
+.lab-marca.hoje i { animation: lab-pulso 1.6s ease-in-out infinite; }
+@keyframes lab-pulso { 50% { opacity: .35; } }
+.lab-v { transform-origin: bottom; animation: lab-sobe .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 45ms); }
+@keyframes lab-sobe { from { transform: scaleY(0); } }
+.lab-alvo { position: absolute; left: 2px; right: 2px; bottom: 0; border: 2px dashed rgba(242,195,53,.7); border-bottom: none; border-radius: 3px 3px 0 0; background: rgba(242,195,53,.07); animation: lab-alvo 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * 90ms); }
+@keyframes lab-alvo { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.lab-dias-tit i { display: inline-block; vertical-align: middle; margin: 0 .3rem 0 .2rem; }
+.lab-dias-tit .lg-meta { width: 1.2rem; border-top: 2px dashed var(--amarelo); }
+.lab-dias-tit .lg-prec { width: .8rem; height: .8rem; border: 2px dashed rgba(242,195,53,.7); border-bottom: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lab-tubo .liquido, .lab-tubo .onda, .lab-tubo .bolha, .lab-hero, .lab-feito, .lab-feito::after, .lab-marca.hoje i, .lab-v, .lab-alvo { animation: none !important; }
+  .lab-tubo .bolha { opacity: 0; }
+}
 </style></head><body>
-<script type="application/json" id="estado">{"versao":1,"campanha":{"inicio":"2026-10-01","fim":"2026-12-18","baseFim":"2026-10-08","feriados":["2026-10-12","2026-11-02","2026-11-20"],"taxaCasa":0.925,"vazamento":0.95,"priorN":10,"minResolv":30,"leadMin":60,"corteElegivel":0.82,"faixas":[[0.97,1.1],[0.95,1.05],[0.9,1],[0.86,0.9],[0.82,0.75],[0,0.5]],"congelaEm":"2026-10-17"},"classes":{"A":10,"B":12,"C":14,"D":17,"E":22,"F":30},"grupos":["Digital","Presencial","USG e coleta"],"participantes":[{"id":"fabricio","nome":"Fabrício","prefixo":"JOSE FABRICIO","horas":40,"classe":"A","grupo":"Digital","ausencias":["2026-10-05","2026-10-06","2026-10-07"],"cor":"#E4572E","foto":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCACgAKADASIAAhEBAxEB/8QAHQAAAQUBAQEBAAAAAAAAAAAAAQACBQYHCAQDCf/EADoQAAEDAwMCBAQEAwcFAAAAAAEAAgMEBREGEiExQQcTIlEUYXGBMkJSkQgjoRUWM7GywdE0Q2KCkv/EABoBAQADAQEBAAAAAAAAAAAAAAADBAUCAQb/xAAkEQACAgICAgMBAQEBAAAAAAAAAQIDBBESIQUxIkFRcTJhM//aAAwDAQACEQMRAD8A6DyllJJSEgcpIJIAo5QSQBSQSQBSQwvlJVU8OfMmjZj9TgEB9ksrxsu1BIHFlZA7Zy7DwcfVGC6UNS4tgq4JCDghjwcFebB68pZQSXoEkllDKAKSCSAWUkCcJqAOSlkpuUUA7IRTEQeyAcjlBJAFeC9Xyg0/b5a+4VDIIIhlznHH2TNQX2k05aai41sjY4oW5y44yewXGuufE2/60rZm1ta803mFzKdvEbfbAXMn9HqRpOv/AOI+4TyvpNNNZDCTjznjLyMLJbrqq6XKc1dRcKuSc9/Mdx/VV4xVM7i9gJDTkenhF1PWBu4skxjjDFHzX6d8Jfh74rvX0ome2uqGyTHEmHnDvqlS6jutvefh6+qgDTkEPPDvdRLny5DZi5z+w24GMIicR7nuadxHLT2K62cGp2P+IPV1sghgqav4uNhGTI0byPqt58NvGiza7DaR720lwIJETz+MD2/4+a4ujqt0hL2Yzx1XutN3ntdcysopnQTQnIePy8/smwz9CUlm/gj4g/320y1lRNvraX+XJucC5wHdaOThSHgshAnlBJAIlDKSGUAso5TUUAcopuUcoBwOE5MCTnbWknoAgOef4jdUy3q50OkrfN+F5dOwH8TsYGfoq5pnwrpPhfMrjvkd0+S+lRDHfPE+83VjWeVFI5jMdyOMrQrdHtjYMLB8llST4QZv+LxIcec1sjbfoK3RsLG0rHNPbb0UhD4fW15AMDA0DBG1WyzUnntwGqfhtXlx5LVRqrsmuSZoW2VwfFox64+FNmD5HCmYe445CpF68JKRxPlFzHOJIaemF0XWW8eogcKlX5kcT3OIxjheylbW97PI1U2LuJzrdvDqrt+XQs3gdQOqqlXaqq3Pe17S0jqCuhauZpkwRx81QdUUsdZLKCwDaTggK5j5tjeplLJ8fVrceiG8H9du0LrOjrZXH4OY+TUMH6T3+y7himbPGyVhBa8BwPyK/OirJpKsbcZY7Iz9V35oSsfX6MstVLKJZJaOJzngYDiWjlbkHtdHz8lp6JzKSSC7PBZQSQQBykgkgCiChlJAOyvPc6gUltqqg9IonP8A2GV9wozVbXO0zdA38RpZMf8AyV4/QOcNIjD6mpeAHzyOkP3JKvtBU7iAFQtPOjgpYXSv2DaMlx6K82e52ItGLpA1/s44XyWQpTk2kfYUOEK0my76frpIHZ8rLenRWttc10Wcduirdhr7U6JpjqoZd/Ta4Fe2rqGsaTG4bVbom6odsq3QVs9jbldI4Mh+0AhZ5qKrjqHPPb2VtqKb4sl8h4PYqraitzImua1zR7HKqX2Sl39FymMYLRQ66rAcTkYBVWuEwe+V3bJVku1FMzO1u4dyFSbpUmOR8Z4wpaSG9lIvkOa7I53Owu8tEUrqHR9npnQ+Q6OkiaY852naOMrha8Y89jgOjgf6rviykmz0RPXyGf6QvocZ7gfNZMdWM9mUMpIFWCASSSGQgBkog5TUQcIByIQSygHBU3xW3R6XfNumDWuDXCN2Mh3GVcgoDXdKavTdTGGl5BBAH1UOR/5S/hPjPVsf6c1i1OqrVFMZXmOmJy1v5ucZK8NTFa6uHbBK+kl6BwI2uP3V0tdKxsUtNVBzYZQ5r8cY5Kh6vw6s4p3fEsqm+rcHtY8H7HHCw6rIuWm9G/ZU+PxW/wClPtd5q7PWYjrZHAOyOcdFs2ldUTV1GXvmdIOoyqBY/DylkcWUlPXGEPOZZRhuPqcZ+y1nRemKehgkjMQkijztJ7qPKUZPSZJjRcVtormrtZVlFT7IZvJJ6EdVldzu+ornMAbhJgn8z8K261tlbctQyU9OA1kOXBh6u+igZNHVstJJJDWxQ3AODg0tJG3uCMZUmJGOvoiyuT/SOFHfIIvMkuJLfYuyoK6Tzvqf5xa4kfib3X1qrJqC1kvmqTIwu9ROcL73eiNJQU5kIMzxvI9gppL5b2ivHbXpr+lWqpN9dF6S8NcCWjuMrtHwm1lX6108+urLfDRsik8qIRkkOaAPfuFxxbofMqnucPU87Wn2XWvgASPDqnY4eplRKHH3OVfx5/LgihkwXDn9s0gppKKaequlEWSgkkgFlJBLKAcDhOCYiCgHrzXWnfVW6oijOHlh2/XsvRlOyvJRUlxf2eqTi+S+jFrNSRS1s0cjfUJCeeoOVfLdBTwREBjCfcjOFmldcXWfV12idwG1DtvyHVGDVlVeKs0lPMKenBw+Y8k/IL5ZRcbGfXQanWmXyqno5KvyGuEk3U4/KFIUzWU1A/aBgjKplXebVpWH4qR+Y3YZJK48/dWmn1FY660Ncyf/ABWbmkchFHcnI6l0kjPL9JDDXmrl9MjHbi4eylo7Za73SMdVRNlOMhw6j6HqqhqbWVpppp4mvbKCHMdnon6XuUxs8VbRymRgHrhJ5x8lxGLS5Em03o9d80rRQMMlP5vp6bpHHH9Vm+paTy2Oc/k54HstSr73HV0DnxEFpGSO4KyLUNxdUzvjznnA+qlp232VslxSICNjjTBkbcySPyHfpA7rsHwftUlo8PrXHM0tlmYZ3A9fUcj+mFgegfCDUFZqW3x3S21MNvcWzTSOHoLOuAenPAXVjGMiY2NjQ1rQA0DoAFuYtbTcmYOVbtKKC5NKJKaVcKIQUiUEkAEsoIoAhFNRCAe1OymA4TggOd/Fpsls13VxjhtS1kzT8yMH+oKo1DfqijkZBK5kXqO5zjtwcrV/4jLI9kdsv0QOGk00rh2/M0n75Cza3Wm36slFLWR4ErM7gcFr8dQse+CjY/8Apt4s3Ota9osEmL7QuhdXU07JGgYdIOCqpcbZqvStJspg6ajOdvlO3bfor5prQugoqNtuulwNBcomhjzJIWBxzw5ruM5/3V8b4Oadlo6ZtJeav1HJkbOHtkb8srmNet/ZPZdBa22mcivoLtW1bny08rSTk7lcbNdq2x0Xklrg3oeVpepvBOClnqJmaj2RML3NY9zc7QO/zWTXuwVLLpHa7ZV+fI7mWVr8iMDrkrpvm9EcXGK5Rltk9TX90tYIGk4ladw7ZA6quOYau+wwt9RkqGMA/wDZSNHQQ2uKoqppPM8hvltdnlx7lSPhBp+TVfiJQM2l0FI74uc+waeAfqcLmqClZ0cZFjVfyOu6OLyKSGL9EbW/sF9HInkJpW0Yf2AoJJFD0WUMpIEoAIhBFAEIhIIgIBJ4TE/IAyegQEDru00d70lcqKve2OF8JIkd+Rw5B/dcu6TnlprgYzndG/BPuFveutQfFwz07CRA1rgP/IgdVzRp6smhqxVyvJZLK8bnc856LKtuV0ml6Rr00SoipS9s2WF9HWVbYLlTwT084APnNyMf5he64+Hul2OjNLc7pQtx6WU1Y4tbx2GeFBCnbc6IBknqDcseOwUVPT3yheR8Y17B03cqGM9LizTahNJyPDq3w/oaEOmN3uFQX+pzpp8545VYgngtdI6KlZsaeC78zvupu+/2hVNHxEgOOw6KsXMiioy6V2C88D3C7UnLogulCK3BaI++3fzIIqWN/AO9ylvDfxgqfDCarENqpqz4vaXveSHgDoAfblUqWYzTGV/foo+uJdKHe4wrVCUX0ZeTJuDbO1PCbxkovEyKeF1MKGvg9Rg37g9vuFopXBGhb9X6cuUNyt07oaiF2Q4Hr8j7hdpeH+sqfXGnIbnEAyYfy54wfwPHX7KxC3cnFladTjFTXpljSKOEFMQgQKdhNQCxynBLCICAQRAykB7p3AGSQAO6AAChNTXX4SEUsTsSSD1EdWhG6appqJxhp/583TjoPuqjUVMtXUSzzHL3lZedmxjFwrfZrYGDKUlZYukV7VzXMtMpjBLywtbj3PH+6zu7Wijma630kDYoaZgha4dXPb1efmTlavcYmSPo4pvwOqYmuz7F4VNvdlks98raSVuC2V2PmCeFm0tqptfpq2xUrUn+FR0zqiex1YoK/LXtcA17uj25zwrsb3bKthdUGIOJ4PGPuqJq21ieNp28joe4VRbHWMfsfO/YPmrMZKaTK75V/Fei56y1DRQOcYHjYOAAs1uVznuspkl4jb0H/C99bROmeXPe+QdfUeFGVzPLG0KetxXSK01Kb3L0R5eSUyQF2A3r0Rz6lbdCaQlvlV8fOwtoaY5LiP8AEd2aFcgttFax/Fnht1vdT43MOeMhax4N6w/udfRBVSFlvrSGy56Nd2coebTojme57dpe4lPbZAQ0O4AOcrLne4WNmhHHU6lFnWMUjJ42yxua9jhlrmnIIRKw3Q+v63TLPgpCayiBGGl3Mf0K2Kyagt9/g82jlBcPxRu4c37LWoyYWrS9mPkYk6X2uv0kMIFOIwUMKwVggIkhjS5xAA6kqCuWsLfQ7mRO8+UcYb0VWuGoK+6Za5xij/SOAqN+fVX0ntl/H8dbb21pFrr9W0NIXMh3VDx+np+6rNx1HXXIFr3eXF+iPp9yo6CHcCdxcR27IXA+RSueeAOyx7s623rejbo8fTV3rb/6NpZzLLw07R3yvSB/NDcYyMqPsMhmozI78zjj6KQedkjHHp0VMukXqV7oY6JzSf8Aq4f9YV+1voRup4Y62kc2OuY0DngSD5n3VGu5+JqLfC0jHn+Yfo3n/PC2K0VTbhbIZ2d24P1C2vHKFlcqpGL5JzqnG2JzpqrS1bQxPjq6WSJ7e5HB+6ziut7muOOq7Tq6SOpiMU8LJoz1a9uQqRfPCvTF0eZH0Dqd57wv2/0Uj8c4/wCGQx8nGf8AtHJlZG6NmXE8fNV2qbJVS+VCx0jyejRkldR1/grpuJ5cIKqf5SSnC+FNoGjtpxQW6GE+7Wc/upK8ScXuQlkxkviYhpDwqrbpLHUXYOpKTOdn/cf8gOy2ems1Na7c0RwNhpKduI4mjAz/AMqyUWmzTMNRU4Yxg3OLuwWb6/8AFm1W5j4La74p8eWtA4YPmfdTWzdUdJbkziqtWS3L0j11ccbLbNUTyY2uLg53+S8zKIXONj2YMeMkjuqxp7xLtGp2w2+8wx0cwPocT/Kcfn7FXetqo6KncYg2ONoG3HdYFtdkHqa7Nmq2uxbg+jw1FPBSMMbcABhypO1Vs1FTsrqGWSJ7QNpacblTLlcntoK6fLy4jy2nHUk4CvdqoTHZqaN4w4Rtz+y4luKUiZaltF+094iNma2C7MDHjgTNHB+oV0hnhqoxJDI2Rh6OacrDpiIy2IcnsFLWq73GxvjfTSktIy6N34Sr9Hk5R6t7RmZPioy+VXT/AA//2Q=="},{"id":"rayssa","nome":"Rayssa","prefixo":"RAYSSA","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#F3A712","foto":null},{"id":"eduarda","nome":"Eduarda","prefixo":"EDUARDA ELLEN","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#29B6F6","foto":null},{"id":"fernanda","nome":"Fernanda","prefixo":"ANA FERNANDA","horas":20,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#8E7CC3","foto":null},{"id":"ester","nome":"Ester","prefixo":"ESTER","horas":18,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#4CB944","foto":null},{"id":"debora","nome":"Débora","prefixo":"DEBORA","horas":24,"classe":"B","grupo":"Presencial","ausencias":[],"cor":"#E86A92","foto":null},{"id":"junior","nome":"Júnior","prefixo":"JOSE GERALDO","horas":21,"classe":"C","grupo":"Presencial","ausencias":[],"cor":"#2EC4B6","foto":null},{"id":"taniely","nome":"Taniely","prefixo":"TANIELY","horas":14,"classe":"D","grupo":"Presencial","ausencias":[],"cor":"#FF8C42","foto":null},{"id":"yury","nome":"Yury","prefixo":"YURY","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#5C80BC","foto":null},{"id":"bruna","nome":"Bruna","prefixo":"BRUNA MANOELA","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#FFB3C6","foto":null},{"id":"darliane","nome":"Darliane","prefixo":"DARLIANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#C2B280","foto":null},{"id":"gerlane","nome":"Gerlane","prefixo":"GERLANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#D7263D","foto":null},{"id":"victoria","nome":"Victoria","prefixo":"VICTORIA","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#1B998B","foto":null},{"id":"thaiane","nome":"Thaiane","prefixo":"THAIANE","horas":5,"classe":"F","grupo":"Presencial","ausencias":[],"cor":"#F46036","foto":null},{"id":"alexandra","nome":"Alexandra","prefixo":"ALEXANDRA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#A23B72","foto":null},{"id":"alicia","nome":"Alícia","prefixo":"ALICIA DA SILVA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#3E92CC","foto":null},{"id":"milena","nome":"Milena","prefixo":"MARIA MILENA","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#C5D86D","foto":null},{"id":"conceicao","nome":"Conceição","prefixo":"CONCEICAO","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#E0A458","foto":null},{"id":"vivian","nome":"Vivian","prefixo":"VIVIAN","horas":2,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#9A8F97","foto":null}],"placar":{"corte":"2026-10-15","ultimoCadastro":"2026-10-15","geradoEm":"2026-10-15T14:03:34.177Z","linhasLidas":2022,"agendamentos":1076,"validos":1001,"foraDosParticipantes":30,"excluidos":{"lead":59,"erro":14,"dup":2},"remarcacoes":{"transferidas":3,"ambiguas":0},"exameDe":"2026-10-01","exameAte":"2026-11-06","linhas":{"fabricio":{"validos":97,"ef":44,"fa":7,"pend":39,"canc":7},"rayssa":{"validos":162,"ef":91,"fa":7,"pend":61,"canc":3},"eduarda":{"validos":129,"ef":80,"fa":10,"pend":37,"canc":2},"fernanda":{"validos":33,"ef":17,"fa":3,"pend":11,"canc":2},"ester":{"validos":59,"ef":37,"fa":6,"pend":13,"canc":3},"debora":{"validos":69,"ef":48,"fa":3,"pend":13,"canc":5},"junior":{"validos":38,"ef":31,"fa":2,"pend":5,"canc":0},"taniely":{"validos":45,"ef":27,"fa":3,"pend":12,"canc":3},"yury":{"validos":54,"ef":23,"fa":5,"pend":25,"canc":1},"bruna":{"validos":59,"ef":27,"fa":2,"pend":30,"canc":0},"darliane":{"validos":63,"ef":30,"fa":3,"pend":28,"canc":2},"gerlane":{"validos":45,"ef":27,"fa":2,"pend":16,"canc":0},"victoria":{"validos":54,"ef":22,"fa":2,"pend":29,"canc":1},"thaiane":{"validos":9,"ef":6,"fa":0,"pend":3,"canc":0},"alexandra":{"validos":8,"ef":6,"fa":1,"pend":1,"canc":0},"alicia":{"validos":30,"ef":13,"fa":3,"pend":14,"canc":0},"milena":{"validos":1,"ef":1,"fa":0,"pend":0,"canc":0},"conceicao":{"validos":12,"ef":5,"fa":0,"pend":6,"canc":1},"vivian":{"validos":4,"ef":2,"fa":0,"pend":2,"canc":0}},"arquivo":{"nome":"agendamentos_1.xlsx","hash":"24824f3b200dd9e3"},"importadoPor":null},"historico":[{"data":"2026-10-08","u":{"fabricio":43,"rayssa":116,"eduarda":76,"fernanda":15,"ester":44,"debora":44,"junior":31,"taniely":28,"yury":27,"bruna":25,"darliane":44,"gerlane":24,"victoria":17,"thaiane":6,"alexandra":5,"alicia":12,"milena":1,"conceicao":5,"vivian":0}},{"data":"2026-10-15","u":{"fabricio":83,"rayssa":152,"eduarda":117,"fernanda":28,"ester":50,"debora":61,"junior":36,"taniely":39,"yury":48,"bruna":57,"darliane":58,"gerlane":43,"victoria":51,"thaiane":9,"alexandra":7,"alicia":27,"milena":1,"conceicao":11,"vivian":4}}]}</script>
+<script type="application/json" id="estado">{"versao":1,"campanha":{"inicio":"2026-10-01","fim":"2026-12-18","baseFim":"2026-10-08","feriados":["2026-10-12","2026-11-02","2026-11-20"],"taxaCasa":0.925,"vazamento":0.95,"priorN":10,"minResolv":30,"leadMin":60,"corteElegivel":0.82,"faixas":[[0.97,1.1],[0.95,1.05],[0.9,1],[0.86,0.9],[0.82,0.75],[0,0.5]],"congelaEm":"2026-10-17"},"classes":{"A":10,"B":12,"C":14,"D":17,"E":22,"F":30},"grupos":["Digital","Presencial","USG e coleta"],"participantes":[{"id":"fabricio","nome":"Fabrício","prefixo":"JOSE FABRICIO","horas":40,"classe":"A","grupo":"Digital","ausencias":["2026-10-05","2026-10-06","2026-10-07"],"cor":"#E4572E","foto":"data:image/jpeg;base64,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"},{"id":"rayssa","nome":"Rayssa","prefixo":"RAYSSA","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#F3A712","foto":null},{"id":"eduarda","nome":"Eduarda","prefixo":"EDUARDA ELLEN","horas":28,"classe":"B","grupo":"Digital","ausencias":[],"cor":"#29B6F6","foto":null},{"id":"fernanda","nome":"Fernanda","prefixo":"ANA FERNANDA","horas":20,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#8E7CC3","foto":null},{"id":"ester","nome":"Ester","prefixo":"ESTER","horas":18,"classe":"C","grupo":"Digital","ausencias":[],"cor":"#4CB944","foto":null},{"id":"debora","nome":"Débora","prefixo":"DEBORA","horas":24,"classe":"B","grupo":"Presencial","ausencias":[],"cor":"#E86A92","foto":null},{"id":"junior","nome":"Júnior","prefixo":"JOSE GERALDO","horas":21,"classe":"C","grupo":"Presencial","ausencias":[],"cor":"#2EC4B6","foto":null},{"id":"taniely","nome":"Taniely","prefixo":"TANIELY","horas":14,"classe":"D","grupo":"Presencial","ausencias":[],"cor":"#FF8C42","foto":null},{"id":"yury","nome":"Yury","prefixo":"YURY","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#5C80BC","foto":null},{"id":"bruna","nome":"Bruna","prefixo":"BRUNA MANOELA","horas":14,"classe":"D","grupo":"Presencial","ausencias":[],"cor":"#FFB3C6","foto":null},{"id":"darliane","nome":"Darliane","prefixo":"DARLIANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#C2B280","foto":null},{"id":"gerlane","nome":"Gerlane","prefixo":"GERLANE","horas":9,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#D7263D","foto":null},{"id":"victoria","nome":"Victoria","prefixo":"VICTORIA","horas":10,"classe":"E","grupo":"Presencial","ausencias":[],"cor":"#1B998B","foto":null},{"id":"thaiane","nome":"Thaiane","prefixo":"THAIANE","horas":5,"classe":"F","grupo":"Presencial","ausencias":[],"cor":"#F46036","foto":null},{"id":"alexandra","nome":"Alexandra","prefixo":"ALEXANDRA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#A23B72","foto":null},{"id":"alicia","nome":"Alícia","prefixo":"ALICIA DA SILVA","horas":7,"classe":"E","grupo":"USG e coleta","ausencias":[],"cor":"#3E92CC","foto":null},{"id":"milena","nome":"Milena","prefixo":"MARIA MILENA","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#C5D86D","foto":null},{"id":"conceicao","nome":"Conceição","prefixo":"CONCEICAO","horas":5,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#E0A458","foto":null},{"id":"vivian","nome":"Vivian","prefixo":"VIVIAN","horas":2,"classe":"F","grupo":"USG e coleta","ausencias":[],"cor":"#9A8F97","foto":null}],"placar":{"corte":"2026-10-20","ultimoCadastro":"2026-10-20","geradoEm":"2026-10-21T09:01:10.691Z","linhasLidas":2718,"agendamentos":1487,"validos":1365,"foraDosParticipantes":32,"excluidos":{"lead":79,"erro":40,"dup":3},"remarcacoes":{"transferidas":5,"ambiguas":0},"exameDe":"2026-10-01","exameAte":"2026-11-11","linhas":{"fabricio":{"validos":149,"ef":76,"fa":9,"pend":56,"canc":8},"rayssa":{"validos":209,"ef":131,"fa":17,"pend":58,"canc":3},"eduarda":{"validos":175,"ef":108,"fa":13,"pend":50,"canc":4},"fernanda":{"validos":39,"ef":26,"fa":3,"pend":8,"canc":2},"ester":{"validos":63,"ef":44,"fa":8,"pend":8,"canc":3},"debora":{"validos":87,"ef":66,"fa":6,"pend":8,"canc":7},"junior":{"validos":46,"ef":34,"fa":2,"pend":8,"canc":2},"taniely":{"validos":61,"ef":37,"fa":6,"pend":14,"canc":4},"yury":{"validos":68,"ef":35,"fa":7,"pend":25,"canc":1},"bruna":{"validos":90,"ef":48,"fa":9,"pend":32,"canc":1},"darliane":{"validos":73,"ef":49,"fa":4,"pend":18,"canc":2},"gerlane":{"validos":70,"ef":38,"fa":2,"pend":29,"canc":1},"victoria":{"validos":100,"ef":45,"fa":5,"pend":49,"canc":1},"thaiane":{"validos":17,"ef":9,"fa":0,"pend":8,"canc":0},"alexandra":{"validos":20,"ef":8,"fa":4,"pend":7,"canc":1},"alicia":{"validos":42,"ef":26,"fa":3,"pend":12,"canc":1},"milena":{"validos":5,"ef":3,"fa":0,"pend":2,"canc":0},"conceicao":{"validos":13,"ef":7,"fa":0,"pend":4,"canc":2},"vivian":{"validos":6,"ef":5,"fa":0,"pend":1,"canc":0}},"arquivo":{"nome":"agend.xlsx","hash":"de7b3cd8a90c42ac"},"importadoPor":null},"historico":[{"data":"2026-10-08","u":{"fabricio":43,"rayssa":116,"eduarda":76,"fernanda":15,"ester":44,"debora":44,"junior":31,"taniely":28,"yury":27,"bruna":25,"darliane":44,"gerlane":24,"victoria":17,"thaiane":6,"alexandra":5,"alicia":12,"milena":1,"conceicao":5,"vivian":0}},{"data":"2026-10-15","u":{"fabricio":83,"rayssa":152,"eduarda":117,"fernanda":28,"ester":50,"debora":61,"junior":36,"taniely":39,"yury":48,"bruna":57,"darliane":58,"gerlane":43,"victoria":51,"thaiane":9,"alexandra":7,"alicia":27,"milena":1,"conceicao":11,"vivian":4}},{"data":"2026-10-20","u":{"fabricio":132,"rayssa":189,"eduarda":158,"fernanda":34,"ester":52,"debora":74,"junior":42,"taniely":51,"yury":60,"bruna":80,"darliane":67,"gerlane":67,"victoria":94,"thaiane":17,"alexandra":15,"alicia":38,"milena":5,"conceicao":11,"vivian":6}}],"lab":{"metas":{"2026-10":240,"2026-11":257,"2026-12":293},"placar":{"corte":"2026-10-20","geradoEm":"2026-10-21T09:01:11.894Z","de":"2026-10-01","ate":"2026-10-20","arquivo":{"nome":"lab.xlsx","hash":"723ebe572df25b11"},"importadoPor":null,"dias":{"2026-10-05":{"vsa":2,"iga":2},"2026-10-01":{"vsa":2,"iga":2},"2026-10-02":{"vsa":4,"iga":5},"2026-10-03":{"vsa":4,"iga":6},"2026-10-06":{"vsa":3,"iga":3},"2026-10-07":{"vsa":4,"iga":3},"2026-10-08":{"vsa":3,"iga":3},"2026-10-09":{"vsa":6,"iga":4},"2026-10-10":{"vsa":7,"iga":5},"2026-10-12":{"vsa":4,"iga":0},"2026-10-13":{"vsa":1,"iga":2},"2026-10-14":{"vsa":4,"iga":7},"2026-10-15":{"vsa":3,"iga":7},"2026-10-16":{"vsa":2,"iga":0},"2026-10-17":{"vsa":6,"iga":2},"2026-10-19":{"vsa":1,"iga":4},"2026-10-20":{"vsa":6,"iga":3}}}}}</script>
 <div id="app"></div>
 <script id="calc-src">/* ===== Apuração — funções puras (mesmas regras do apuracao.py) ===== */
 var Calc = (function () {
@@ -495,7 +588,56 @@ var Calc = (function () {
     return melhor;
   }
 
-  return { apurar: apurar, derivar: derivar, voltaRapida: voltaRapida, diasEquiv: diasEquiv, parseDia: parseDia, dkey: dkey, norm: norm };
+  /* ===== Força-tarefa Lab =====
+     Fonte: relatório de produtos faturados do Naja (uma linha por exame).
+     1 coleta = 1 atendimento com pelo menos um exame não cancelado. Guarda só contagens por dia e unidade. */
+  var COLS_LAB = ["Atendimento", "Data Atend", "Empresa", "Status do atendimento"];
+  function unidadeLab(emp) { return norm(emp).indexOf("IGARASSU") >= 0 ? "iga" : "vsa"; }
+  function apurarLab(rows, cfg) {
+    var faltando = COLS_LAB.filter(function (c) { return !rows.length || !(c in rows[0]); });
+    if (faltando.length) throw new Error("A planilha não tem as colunas: " + faltando.join(", ") + ". Exporte o relatório de produtos do laboratório do Naja.");
+    var at = {}, lidas = 0;
+    rows.forEach(function (r) {
+      if (!r["Empresa"] || r["Atendimento"] == null) return;
+      lidas++;
+      var d = toDate(r["Data Atend"]); if (!d) return;
+      var k = String(r["Atendimento"]);
+      var a = at[k] || (at[k] = { dia: dkey(d), un: unidadeLab(r["Empresa"]), ex: 0, canc: 0 });
+      if (String(r["Status do atendimento"] || "").trim().toUpperCase() === "C") a.canc++; else a.ex++;
+    });
+    var dias = {}, exames = 0, cancelados = 0, de = null, ate = null;
+    Object.keys(at).forEach(function (k) {
+      var a = at[k];
+      if (!de || a.dia < de) de = a.dia; if (!ate || a.dia > ate) ate = a.dia;
+      if (!a.ex) { cancelados++; return; }
+      var d = dias[a.dia] || (dias[a.dia] = { vsa: 0, iga: 0 });
+      d[a.un]++; exames += a.ex;
+    });
+    var tot = 0; Object.keys(dias).forEach(function (k) { tot += dias[k].vsa + dias[k].iga; });
+    return { corte: cfg && cfg.corte ? cfg.corte : ate, geradoEm: new Date().toISOString(), linhasLidas: lidas,
+      coletas: tot, exames: exames, canceladas: cancelados, de: de, ate: ate, dias: dias };
+  }
+  /* dias de coleta: segunda a sábado (domingo fechado) */
+  function diasColeta(a, b) { var t = 0, d = new Date(a.getFullYear(), a.getMonth(), a.getDate()); while (d <= b) { if (d.getDay() !== 0) t++; d = addDias(d, 1); } return t; }
+  function derivarLab(lab, mesKey) {
+    var dias = (lab && lab.placar && lab.placar.dias) || {}, corte = lab && lab.placar ? lab.placar.corte : null;
+    var mes = mesKey || (corte ? corte.slice(0, 7) : null);
+    var meses = {};
+    Object.keys(dias).forEach(function (k) { var m = k.slice(0, 7), x = meses[m] || (meses[m] = { vsa: 0, iga: 0 }); x.vsa += dias[k].vsa; x.iga += dias[k].iga; });
+    var cur = meses[mes] || { vsa: 0, iga: 0 }, feito = cur.vsa + cur.iga, meta = (lab.metas || {})[mes] || 0;
+    var p = mes.split("-"), ini = new Date(+p[0], +p[1] - 1, 1), fim = new Date(+p[0], +p[1], 0);
+    var dCorte = corte ? parseDia(corte) : ini;
+    var decorridos = diasColeta(ini, dCorte), restantes = Math.max(0, diasColeta(addDias(dCorte, 1), fim));
+    var media = decorridos ? feito / decorridos : 0;
+    var serie = [];
+    for (var d = new Date(ini); d <= fim; d = addDias(d, 1)) { var k = dkey(d), x = dias[k]; serie.push({ dia: k, dom: d.getDay() === 0, n: x ? x.vsa + x.iga : null, futuro: corte ? k > corte : true }); }
+    return { mes: mes, meta: meta, feito: feito, vsa: cur.vsa, iga: cur.iga, falta: Math.max(0, meta - feito), pct: meta ? feito / meta : 0,
+      decorridos: decorridos, restantes: restantes, media: media, precisa: restantes ? Math.max(0, meta - feito) / restantes : null,
+      projecao: Math.round(feito + media * restantes), serie: serie, meses: meses, totalDias: diasColeta(ini, fim) };
+  }
+
+  return { apurar: apurar, derivar: derivar, voltaRapida: voltaRapida, apurarLab: apurarLab, derivarLab: derivarLab,
+    diasEquiv: diasEquiv, parseDia: parseDia, dkey: dkey, norm: norm };
 })();
 if (typeof module !== "undefined") module.exports = Calc;
 </script>
@@ -575,8 +717,35 @@ if (typeof module !== "undefined") module.exports = Calc;
   }
 
   /* ---------- tela principal ---------- */
-  var ultimaDer = null;
-  function render() {
+  var ultimaDer = null, vista = "corrida";
+  function temLab() { return !!(ESTADO.lab && ESTADO.lab.placar); }
+  function render() { if (vista === "lab" && temLab()) renderLab(); else renderCorrida(); }
+  function botoes(outra) {
+    return '<div class="acoes">' +
+      (temLab() ? '<button class="btn" id="b-vista" type="button">' + outra + '</button>' : '') +
+      (vista === "corrida" ? '<button class="btn" id="b-intervalo" type="button">Ver intervalo</button>' : '') +
+      '<button class="btn" id="b-tela" type="button">Tela cheia</button>' +
+      '<button class="btn" id="b-tv" type="button">Modo TV</button>' +
+      (cap.podeEditar ? '<button class="btn forte so-gestao" id="b-gestao" type="button">Gestão</button>' : '') + '</div>';
+  }
+  function ligaBotoes() {
+    var bt = document.getElementById("b-tela");
+    if (bt) bt.onclick = function () {
+      var d = document.documentElement;
+      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
+      else if (d.requestFullscreen) d.requestFullscreen().catch(function () {});
+      ligarTela();
+    };
+    var btv = document.getElementById("b-tv");
+    if (btv) btv.onclick = function () { modoTV(true); };
+    var bi = document.getElementById("b-intervalo");
+    if (bi) bi.onclick = function () { tocarIntervalo(); };
+    var bv = document.getElementById("b-vista");
+    if (bv) bv.onclick = function () { vista = vista === "lab" ? "corrida" : "lab"; render(); };
+    var bg = document.getElementById("b-gestao");
+    if (bg) bg.onclick = abrirGestao;
+  }
+  function renderCorrida() {
     var der = Calc.derivar(ESTADO), c = ESTADO.campanha, pl = ESTADO.placar;
     ultimaDer = der;
     var podio = der.pessoas.slice(0, 3);
@@ -591,12 +760,7 @@ if (typeof module !== "undefined") module.exports = Calc;
       '<div class="ind"><b>' + diasAte(c.fim) + '</b><span>dias para a bandeirada</span></div>' +
       '<div class="ind"><b>' + num(der.tot.ef) + '</b><span>pacientes compareceram</span></div>' +
       '<div class="ind"><b>' + num(der.tot.pend) + '</b><span>agendados por vir</span></div>' +
-      '</div><div class="acoes">' +
-      '<button class="btn" id="b-intervalo" type="button">Ver intervalo</button>' +
-      '<button class="btn" id="b-tela" type="button">Tela cheia</button>' +
-      '<button class="btn" id="b-tv" type="button">Modo TV</button>' +
-      (cap.podeEditar ? '<button class="btn forte so-gestao" id="b-gestao" type="button">Gestão</button>' : '') +
-      '</div></header>';
+      '</div>' + botoes("Força-tarefa Lab") + '</header>';
 
     h += '<main class="corpo"><section class="pista" aria-label="Pista: posição de cada pessoa pelos pontos">';
     h += '<div class="regua"><div>Posição</div><div class="escala"><span style="left:0;transform:none">Largada</span>' +
@@ -651,20 +815,117 @@ if (typeof module !== "undefined") module.exports = Calc;
       });
     }
     if (REDUZ) posiciona(); else requestAnimationFrame(function () { requestAnimationFrame(posiciona); });
+    ligaBotoes();
+  }
 
-    var bt = document.getElementById("b-tela");
-    if (bt) bt.onclick = function () {
-      var d = document.documentElement;
-      if (document.fullscreenElement) document.exitFullscreen().catch(function () {});
-      else if (d.requestFullscreen) d.requestFullscreen().catch(function () {});
-      ligarTela();
-    };
-    var btv = document.getElementById("b-tv");
-    if (btv) btv.onclick = function () { modoTV(true); };
-    var bi = document.getElementById("b-intervalo");
-    if (bi) bi.onclick = function () { tocarIntervalo(); };
-    var bg = document.getElementById("b-gestao");
-    if (bg) bg.onclick = abrirGestao;
+  /* ---------- tela da força-tarefa Lab: meta coletiva, sem ranking individual ---------- */
+  var MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  function nomeMes(m) { var p = m.split("-"); return MESES[+p[1] - 1]; }
+  var TUBO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="15" y="3" width="10" height="4" rx="1.5" fill="#ece6d8"/><path d="M16 7 H24 V31 Q24 37 20 37 Q16 37 16 31 Z" fill="none" stroke="#ece6d8" stroke-width="2.4"/><path d="M17.3 20 H22.7 V31 Q22.7 35.6 20 35.6 Q17.3 35.6 17.3 31 Z" fill="#d9483b"/></svg>';
+  function renderLab() {
+    var L = ESTADO.lab, pl = L.placar, x = Calc.derivarLab(L), h = '';
+    var esperadoHoje = x.meta * (x.decorridos / Math.max(1, x.totalDias));
+    var noRitmo = x.projecao >= x.meta;
+    var pctTxt = num(Math.min(999, x.pct * 100)) + '%';
+    h += '<header class="topo"><div class="marca"><div class="lab-icone">' + TUBO + '</div><div><h1>Força-tarefa Lab</h1>' +
+      '<small>Meta coletiva de coletas · ' + nomeMes(x.mes) + ' ' + x.mes.slice(0, 4) + '</small></div></div>' +
+      '<div class="indicadores">' +
+      '<div class="ind apurado"><span>Dados apurados até</span><b>' + dataBRano(pl.corte) + '</b></div>' +
+      '<div class="ind"><b>' + num(x.feito) + '</b><span>coletas no mês</span></div>' +
+      '<div class="ind"><b>' + num(x.meta) + '</b><span>meta de ' + nomeMes(x.mes) + '</span></div>' +
+      '<div class="ind"><b>' + (x.precisa == null ? '—' : num(Math.ceil(x.precisa))) + '</b><span>coletas/dia até ' + dataBR(x.serie[x.serie.length - 1].dia) + '</span></div>' +
+      '</div>' + botoes("Ver corrida") + '</header>';
+
+    h += '<main class="corpo"><section class="pista lab-principal" aria-label="Progresso da meta do mês">';
+    var fimMes = dataBR(x.serie[x.serie.length - 1].dia), porDia = x.precisa == null ? null : Math.ceil(x.precisa);
+    h += '<div class="lab-placar">' + tuboAnimado(Math.min(1, x.pct)) +
+      '<div class="lab-centro"><div class="lab-grande"><b data-conta="' + x.feito + '">' + num(x.feito) + '</b><span>de ' + num(x.meta) + ' coletas · ' + pctTxt + '</span></div>' +
+      '<div class="lab-status ' + (noRitmo ? 'ok' : 'alerta') + '">' + (noRitmo ? 'No ritmo da meta' : 'Abaixo do ritmo da meta') + '</div></div>' +
+      '<div class="lab-hero"><span class="rot">Para bater a meta precisamos de</span><b>' + (porDia == null ? '—' : num(porDia)) + '</b>' +
+      '<span class="un">coletas por dia</span><span class="det">até ' + fimMes + ' · ' + x.restantes + ' dias de coleta (seg–sáb) · hoje fazemos ' + num(x.media, 1) + '/dia</span></div></div>';
+    var lim = Math.max(x.meta, x.projecao, x.feito) * 1.04 || 1;
+    function pos(v) { return Math.min(100, v / lim * 100); }
+    h += '<div class="lab-barra" role="img" aria-label="' + num(x.feito) + ' de ' + num(x.meta) + ' coletas, ' + pctTxt + ' da meta">' +
+      '<div class="lab-proj" style="width:' + pos(x.projecao) + '%"></div>' +
+      '<div class="lab-feito" style="width:' + pos(x.feito) + '%"><span>' + pctTxt + '</span></div>' +
+      '<div class="lab-marca meta" style="left:' + pos(x.meta) + '%"><i></i><em>Meta ' + num(x.meta) + '</em></div>' +
+      '<div class="lab-marca hoje" style="left:' + pos(esperadoHoje) + '%"><i></i><em>Ritmo hoje ' + num(esperadoHoje) + '</em></div></div>';
+    h += '<div class="lab-legenda"><span><i class="lf"></i>Coletas feitas</span><span><i class="lp"></i>Projeção no ritmo atual: ' + num(x.projecao) + '</span></div>';
+    h += '<div class="lab-numeros">' +
+      '<div><b>' + num(x.falta) + '</b><span>coletas faltando para a meta</span></div>' +
+      '<div><b>' + x.restantes + '</b><span>dias de coleta até ' + fimMes + '</span></div>' +
+      '<div><b>' + num(x.media, 1) + '</b><span>média atual por dia de coleta</span></div></div>';
+    /* barras por dia */
+    var maxDia = 1; x.serie.forEach(function (d) { if (d.n > maxDia) maxDia = d.n; });
+    var metaDia = x.meta / Math.max(1, x.totalDias); maxDia = Math.max(maxDia, metaDia, x.precisa || 0) * 1.15;
+    h += '<div class="lab-dias-tit">Coletas por dia <small><i class="lg-meta"></i>média que a meta pede (' + num(metaDia, 1) + ') · <i class="lg-prec"></i>o que precisamos daqui pra frente (' + (porDia == null ? '—' : num(x.precisa, 1)) + ')</small></div><div class="lab-dias">';
+    var iv = 0;
+    x.serie.forEach(function (d) {
+      if (d.dom) return;
+      var cls = d.futuro ? ' futuro' : '';
+      var alt = d.futuro && x.precisa ? '<div class="lab-alvo" style="height:' + (x.precisa / maxDia * 100) + '%;--i:' + iv + '"></div>' : '';
+      h += '<div class="lab-dia' + cls + '"><div class="lab-col">' + (d.n ? '<div class="lab-v" style="height:' + (d.n / maxDia * 100) + '%;--i:' + iv + '"><span>' + d.n + '</span></div>' : alt) + '</div><small>' + d.dia.slice(8) + '</small></div>';
+      iv++;
+    });
+    h += '<div class="lab-linha" style="--f:' + (metaDia / maxDia).toFixed(4) + '"></div></div>';
+    h += '</section>';
+
+    h += '<aside class="lateral"><section class="bloco"><h2>Por unidade</h2>';
+    var tot = Math.max(1, x.vsa + x.iga);
+    [["Vitória", x.vsa, "var(--amarelo)"], ["Igarassu", x.iga, "#29b6f6"]].forEach(function (u) {
+      h += '<div class="lab-un"><div class="lab-un-top"><b>' + u[0] + '</b><span>' + num(u[1]) + ' coletas · ' + num(u[1] / tot * 100) + '%</span></div>' +
+        '<div class="lab-un-barra"><i style="width:' + (u[1] / tot * 100) + '%;background:' + u[2] + '"></i></div></div>';
+    });
+    h += '</section><section class="bloco"><h2>A escada do trimestre</h2><div class="escada">';
+    Object.keys(L.metas || {}).sort().forEach(function (m) {
+      var r = x.meses[m], feito = r ? r.vsa + r.iga : null, atual = m === x.mes;
+      h += '<div class="degrau' + (atual ? ' atual' : '') + '"><span>' + nomeMes(m) + '</span><b>' + num(L.metas[m]) + '</b><em>' +
+        (feito == null ? 'a começar' : num(feito) + ' feitas' + (feito >= L.metas[m] ? ' ✓' : '')) + '</em></div>';
+    });
+    h += '</div></section><section class="bloco"><h2>Como funciona</h2><ul class="regras">' +
+      '<li>A meta é do time inteiro, nas duas unidades.</li>' +
+      '<li>Cada paciente atendido no laboratório conta 1 coleta, não importa quantos exames.</li>' +
+      '<li>Atendimento cancelado não conta.</li>' +
+      '<li>Toda indicação de check-up e cada paciente de imagem lembrado do laboratório ajuda.</li></ul></section>';
+    h += '<p class="rodape">Relatório do laboratório do Naja de ' + dataBRano(pl.corte) + ' · publicado em ' + quando(pl.geradoEm) + '.</p>';
+    h += '</aside></main>';
+    app.innerHTML = h;
+    ligaBotoes();
+    var cont = app.querySelector("[data-conta]");
+    if (cont && !REDUZ) {
+      var alvo = +cont.dataset.conta, t0 = null;
+      cont.textContent = "0";
+      var passo = function (t) { if (t0 == null) t0 = t; var k = Math.min(1, (t - t0) / 1600), e = 1 - Math.pow(1 - k, 3);
+        cont.textContent = num(Math.round(alvo * e)); if (k < 1 && cont.isConnected) requestAnimationFrame(passo); };
+      requestAnimationFrame(passo);
+    }
+  }
+  /* tubo de ensaio enchendo até o % da meta, com onda e bolhas */
+  var tuboId = 0;
+  function tuboAnimado(f) {
+    var id = "tb" + (tuboId++), topo = 26, base = 206, nivel = base - (base - topo) * f;
+    var bolhas = '';
+    for (var i = 0; i < 7; i++) bolhas += '<circle class="bolha" cx="' + (26 + (i * 13) % 30) + '" cy="' + (base - 6) + '" r="' + (2 + i % 3) + '" style="--d:' + (i * 0.55).toFixed(2) + 's;--s:' + (2.6 + (i % 3) * 0.7).toFixed(1) + 's;--h:' + Math.max(10, (base - nivel) - 8).toFixed(0) + 'px"/>';
+    return '<div class="lab-tubo" aria-hidden="true"><svg viewBox="0 0 80 224">' +
+      '<defs><clipPath id="' + id + '"><path d="M18 22 H62 V186 Q62 210 40 210 Q18 210 18 186 Z"/></clipPath></defs>' +
+      '<g clip-path="url(#' + id + ')"><rect x="0" y="0" width="80" height="224" fill="rgba(236,230,216,.05)"/>' +
+      '<g class="liquido" style="--nivel:' + nivel.toFixed(1) + 'px">' +
+      '<path class="onda o2" d="M-80 6 Q-60 0 -40 6 T0 6 T40 6 T80 6 T120 6 T160 6 V230 H-80 Z" fill="#2f8f5f"/>' +
+      '<path class="onda o1" d="M-80 6 Q-60 12 -40 6 T0 6 T40 6 T80 6 T120 6 T160 6 V230 H-80 Z" fill="#57c48a"/></g>' +
+      '<g class="bolhas" style="--base:' + base + 'px">' + bolhas + '</g></g>' +
+      '<path d="M18 22 H62 V186 Q62 210 40 210 Q18 210 18 186 Z" fill="none" stroke="#ece6d8" stroke-width="3"/>' +
+      '<rect x="12" y="12" width="56" height="12" rx="4" fill="#ece6d8"/>' +
+      '<path d="M26 40 V170" stroke="rgba(255,255,255,.18)" stroke-width="4" stroke-linecap="round"/></svg></div>';
+  }
+
+  /* modo TV: alterna corrida (90 s) e Lab (45 s) */
+  var rotTimer = null;
+  function rotacionar() {
+    clearTimeout(rotTimer);
+    rotTimer = setTimeout(function () {
+      if (TV && temLab() && !tela && !(document.getElementById("gestao") && document.getElementById("gestao").open)) { vista = vista === "corrida" ? "lab" : "corrida"; render(); }
+      rotacionar();
+    }, !TV || !temLab() ? 15000 : (vista === "corrida" ? 90000 : 45000));
   }
 
   function modoTV(on) {
@@ -967,6 +1228,7 @@ if (typeof module !== "undefined") module.exports = Calc;
   function abrirGestao() {
     rascunho = JSON.parse(JSON.stringify(ESTADO));
     previa = null;
+    previaLab = null; metasRasc = null;
     var d = document.getElementById("gestao");
     if (!d) { d = document.createElement("dialog"); d.id = "gestao"; d.className = "gestao"; document.body.appendChild(d); }
     renderGestao();
@@ -976,13 +1238,14 @@ if (typeof module !== "undefined") module.exports = Calc;
 
   function renderGestao() {
     var d = document.getElementById("gestao");
-    var abas = [["placar", "Atualizar placar"], ["pessoas", "Participantes"], ["memoria", "Memória de cálculo"], ["registro", "Registro"]];
+    var abas = [["placar", "Atualizar placar"], ["lab", "Lab"], ["pessoas", "Participantes"], ["memoria", "Memória de cálculo"], ["registro", "Registro"]];
     var h = '<div class="g-topo"><h2>Gestão</h2><div class="abas" role="tablist">';
     abas.forEach(function (a) { h += '<button class="aba" role="tab" type="button" data-aba="' + a[0] + '" aria-selected="' + (abaAtual === a[0]) + '">' + a[1] + '</button>'; });
     h += '</div><button class="btn g-fechar" type="button" id="g-fechar">Fechar</button></div><div class="g-corpo">';
     if (abaAtual === "placar") h += abaPlacar();
     else if (abaAtual === "pessoas") h += abaPessoas();
     else if (abaAtual === "memoria") h += abaMemoria();
+    else if (abaAtual === "lab") h += abaLab();
     else h += abaRegistro();
     h += '</div>';
     d.innerHTML = h;
@@ -992,6 +1255,7 @@ if (typeof module !== "undefined") module.exports = Calc;
     if (abaAtual === "pessoas") ligaPessoas();
     if (abaAtual === "memoria") ligaMemoria();
     if (abaAtual === "registro") ligaRegistro();
+    if (abaAtual === "lab") ligaLab();
   }
 
   /* problemas que impedem publicar o placar */
@@ -1245,6 +1509,74 @@ if (typeof module !== "undefined") module.exports = Calc;
     document.querySelectorAll("#gestao tr.clicavel").forEach(function (tr) { tr.onclick = function () { memSel = tr.dataset.id; renderGestao(); }; });
   }
 
+  /* ---------- Gestão · Lab ---------- */
+  var previaLab = null, metasRasc = null;
+  function abaLab() {
+    var L = ESTADO.lab || { metas: {} }, h = '';
+    if (!metasRasc) metasRasc = JSON.parse(JSON.stringify(L.metas || {}));
+    h += '<p>Relatório de produtos do laboratório do Naja (uma linha por exame). Cada atendimento conta 1 coleta; atendimento cancelado não conta. O painel guarda só a contagem por dia e unidade, nenhum dado de paciente nem valor.</p>';
+    h += '<div class="lab-metas"><b>Metas do mês</b>';
+    Object.keys(metasRasc).sort().forEach(function (m) {
+      h += '<label>' + nomeMes(m) + ' <input type="number" min="0" step="1" data-mes="' + m + '" value="' + metasRasc[m] + '"></label>';
+    });
+    h += '</div>';
+    h += '<div class="arquivo"><input type="file" id="gl-arquivo" accept=".xlsx,.xls"><span id="gl-status" class="vazio"></span></div>';
+    if (previaLab && previaLab.erro) h += '<div class="aviso erro">' + esc(previaLab.erro) + '</div>';
+    if (previaLab && previaLab.pl) {
+      var pl = previaLab.pl, atual = L.placar;
+      h += '<div class="corte-box"><label for="gl-corte"><b>Data em que o relatório foi exportado</b></label><input type="date" id="gl-corte" value="' + pl.corte + '" max="' + hojeKey() + '">' +
+        '<span class="vazio">Os dias de ' + dataBRano(pl.de) + ' a ' + dataBRano(pl.ate) + ' substituem o que já estava publicado nesse intervalo. Dias fora dele ficam como estão.</span></div>';
+      if (pl.corte > hojeKey()) h += '<div class="aviso erro">A data da exportação não pode ser depois de hoje.</div>';
+      if (atual && pl.corte < atual.corte) h += '<div class="aviso erro">Esta exportação é de ' + dataBRano(pl.corte) + ', anterior ao placar do Lab publicado (' + dataBRano(atual.corte) + '). Confira se é o arquivo certo.</div>';
+      var vsa = 0, iga = 0; Object.keys(pl.dias).forEach(function (k) { vsa += pl.dias[k].vsa; iga += pl.dias[k].iga; });
+      h += '<div class="resumo"><div><b>' + num(pl.coletas) + '</b><span>coletas (atendimentos válidos)</span></div>' +
+        '<div><b>' + num(vsa) + ' · ' + num(iga) + '</b><span>Vitória · Igarassu</span></div>' +
+        '<div><b>' + num(pl.exames) + '</b><span>exames nesses atendimentos</span></div>' +
+        '<div><b>' + num(pl.canceladas) + '</b><span>atendimentos cancelados (fora)</span></div>' +
+        '<div><b>' + dataBR(pl.de) + '–' + dataBR(pl.ate) + '</b><span>período do arquivo</span></div></div>';
+      h += '<p class="vazio">Arquivo: ' + esc(previaLab.arquivo.nome) + ' · impressão digital ' + esc(previaLab.arquivo.hash) + '</p>';
+    }
+    var bl = previaLab && previaLab.pl && previaLab.pl.corte > hojeKey();
+    h += '<div class="rodape-g"><button class="btn forte" type="button" id="gl-publicar"' + (cap.artifact && !bl ? '' : ' disabled') + '>' +
+      (previaLab && previaLab.pl ? 'Publicar placar do Lab' : 'Salvar metas') + '</button><span class="vazio" id="gl-pub-status"></span></div>';
+    return h;
+  }
+  function ligaLab() {
+    var d = document.getElementById("gestao");
+    d.querySelectorAll("input[data-mes]").forEach(function (e) {
+      e.onchange = function () { var v = parseInt(e.value, 10); if (v >= 0) metasRasc[e.dataset.mes] = v; };
+    });
+    var inp = document.getElementById("gl-arquivo"), st = document.getElementById("gl-status");
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0]; if (!f) return;
+      st.textContent = "Lendo " + f.name + "…";
+      var buf;
+      carregaXLSX().then(function () { return f.arrayBuffer(); }).then(function (b) { buf = b; return impressao(b.slice(0)); }).then(function (hash) {
+        var wb = XLSX.read(buf, { cellDates: true });
+        var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: null, raw: true });
+        previaLab = { rows: rows, arquivo: { nome: f.name, hash: hash } };
+        previaLab.pl = Calc.apurarLab(rows, { corte: hojeKey() });
+      }).catch(function (e) { previaLab = { erro: e.message || String(e) }; }).then(renderGestao);
+    };
+    var dc = document.getElementById("gl-corte");
+    if (dc) dc.onchange = function () { if (/^\d{4}-\d{2}-\d{2}$/.test(dc.value)) { previaLab.pl = Calc.apurarLab(previaLab.rows, { corte: dc.value }); renderGestao(); } };
+    var pub = document.getElementById("gl-publicar");
+    pub.onclick = function () {
+      var novo = JSON.parse(JSON.stringify(ESTADO));
+      novo.lab = novo.lab || { metas: {} };
+      novo.lab.metas = JSON.parse(JSON.stringify(metasRasc));
+      if (previaLab && previaLab.pl) {
+        var pl = previaLab.pl, dias = {};
+        var velhos = (novo.lab.placar && novo.lab.placar.dias) || {};
+        Object.keys(velhos).forEach(function (k) { if (k < pl.de || k > pl.ate) dias[k] = velhos[k]; });
+        Object.keys(pl.dias).forEach(function (k) { dias[k] = pl.dias[k]; });
+        novo.lab.placar = { corte: pl.corte, geradoEm: pl.geradoEm, de: pl.de, ate: pl.ate, arquivo: previaLab.arquivo, importadoPor: cap.eu || null, dias: dias };
+        novo.importacoes = (novo.importacoes || []).concat([{ em: pl.geradoEm, por: cap.eu || null, corte: pl.corte, arquivo: "[Lab] " + previaLab.arquivo.nome, hash: previaLab.arquivo.hash, linhas: pl.linhasLidas, validos: pl.coletas }]).slice(-150);
+      }
+      publicar(novo, pub, document.getElementById("gl-pub-status"));
+    };
+  }
+
   function quem(id) { return id ? (nomes[id] || "editor") : "—"; }
   function abaRegistro() {
     var h = '', alt = (ESTADO.alteracoes || []).slice().reverse(), imp = (ESTADO.importacoes || []).slice().reverse();
@@ -1305,7 +1637,7 @@ if (typeof module !== "undefined") module.exports = Calc;
     delete e.alteracoes; delete e.importacoes; delete e.base;   /* registro interno não vai para o site público */
     if (e.placar) delete e.placar.base;
     var json = JSON.stringify(e).replace(/</g, "\\u003c");
-    var versao = hashTxt(json);
+    var versao = hashTxt(json + document.getElementById("css").textContent + document.getElementById("calc-src").textContent + document.getElementById("app-src").textContent);
     return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' +
       '<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">' +
       '<meta name="campeao-versao" content="' + versao + '"><title>Campeão de Agendamentos</title>' +
@@ -1342,6 +1674,7 @@ if (typeof module !== "undefined") module.exports = Calc;
   }
 
   render();
+  rotacionar();
   if (TV) ligarTela();
   abertura();
   setInterval(function () { if (!tela) render(); }, 60 * 60 * 1000 + 90000);
